@@ -9,115 +9,256 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
 
   <style>
-    :root {
-      /* Identidade (APS 360 - Autoridade e Dados) */
-      --aps-blue: #1e3a8a;       /* blue-900 */
-      --aps-blue-light: #eff6ff; /* blue-50 */
-      --aps-alert: #dc2626;      /* red-600 */
-      --aps-success: #16a34a;    /* green-600 */
-      --acs-bg: #f8fafc;         /* slate-50 */
-      --acs-ink: #0f172a;        /* slate-900 */
-      --acs-muted: #475569;      /* slate-600 */
-      --acs-line: #e2e8f0;       /* slate-200 */
+    :root{
+      --aps-blue:#1e3a8a;
+      --aps-blue-2:#1e40af;
+      --aps-blue-light:#eff6ff;
+      --aps-alert:#dc2626;
+      --aps-success:#16a34a;
+
+      --bg:#f8fafc;
+      --ink:#0f172a;
+      --muted:#475569;
+      --line:#e2e8f0;
+      --card:#ffffff;
     }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--acs-bg);
-      color: var(--acs-ink);
-      overflow-x: hidden;
-      scroll-behavior: smooth;
+    html,body{ height:100%; }
+    body{
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x:hidden;
+      scroll-behavior:smooth;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .container-safe {
-      width: 100%;
-      max-width: 1100px;
-      padding: 0 1.5rem;
-      margin: 0 auto;
+    .container-safe{
+      width:100%;
+      max-width:1100px;
+      padding:0 1.25rem;
+      margin:0 auto;
     }
 
-    /* Utilitários de Cores */
-    .text-aps-blue { color: var(--aps-blue); }
-    .bg-aps-blue { background-color: var(--aps-blue); }
-    .border-aps-blue { border-color: var(--aps-blue); }
+    .text-aps-blue{ color:var(--aps-blue); }
+    .bg-aps-blue{ background-color:var(--aps-blue); }
+    .border-aps-blue{ border-color:var(--aps-blue); }
+    .text-aps-alert{ color:var(--aps-alert); }
+    .text-aps-success{ color:var(--aps-success); }
 
-    .text-aps-alert { color: var(--aps-alert); }
-    .text-aps-success { color: var(--aps-success); }
+    /* HERO */
+    .hero-wrap{
+      background:
+        radial-gradient(1000px 500px at 20% 0%, rgba(30,58,138,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(37,99,235,.10), transparent 55%),
+        linear-gradient(#ffffff, #ffffff);
+      border-bottom: 1px solid var(--line);
+    }
 
-    /* Hero imagem no tamanho do print (alto em desktop; menor no mobile) */
-    .img-frame {
-      border-radius: 1rem;
-      overflow: hidden;
-      position: relative;
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 20px 30px -20px rgba(15, 23, 42, 0.25);
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.4rem .75rem;
+      border-radius:999px;
+      font-weight:900;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      background: rgba(239,246,255,.9);
+      border: 1px solid rgba(191,219,254,.9);
+      color: var(--aps-blue);
     }
-    .img-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+
+    .hero-title{
+      letter-spacing:-0.03em;
     }
-    .img-fallback {
-      position: absolute;
+
+    .soft-card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 45px -35px rgba(2,6,23,.35);
+    }
+
+    .info-card{
+      background: rgba(239,246,255,.9);
+      border: 1px solid rgba(191,219,254,.9);
+      border-radius: 18px;
+    }
+
+    /* HERO IMAGE */
+    .img-frame{
+      border-radius: 18px;
+      overflow:hidden;
+      position:relative;
+      background:#f1f5f9;
+      border:1px solid #e2e8f0;
+      box-shadow: 0 24px 60px -45px rgba(2,6,23,.55);
+      cursor: zoom-in;
+      user-select:none;
+    }
+    .img-frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .img-fallback{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      color:#64748b;
+      border:2px dashed #cbd5e1;
+      border-radius:18px;
+      margin:12px;
+      text-align:center;
+      padding:24px;
+      background: rgba(248,250,252,.88);
+      cursor: default;
+    }
+
+    /* FLOAT CTA */
+    .float-btn{
+      position:fixed;
+      right:16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index:999;
+      background-color: var(--aps-blue);
+      color:#fff;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: .85rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+      box-shadow: 0 14px 30px -14px rgba(30,58,138,.55);
+    }
+    .float-btn:hover{ transform: scale(1.03); background-color: var(--aps-blue-2); }
+    .float-btn.is-hidden{ opacity:0; pointer-events:none; }
+
+    /* PURCHASE CTA ALWAYS VISIBLE + slow green pulse */
+    .cta-buy{
+      background: var(--aps-success);
+      box-shadow: 0 18px 40px -18px rgba(22,163,74,.65);
+      outline: none;
+      border: none;
+      opacity: 1 !important;
+      filter: none !important;
+      animation: greenPulse 2.6s ease-in-out infinite;
+    }
+    .cta-buy:hover{ background:#15803d; }
+    @keyframes greenPulse{
+      0%,100% { transform: translateZ(0) scale(1); box-shadow: 0 18px 40px -18px rgba(22,163,74,.65); }
+      50%     { transform: translateZ(0) scale(1.01); box-shadow: 0 22px 55px -22px rgba(22,163,74,.85); }
+    }
+
+    /* CLICK HIGHLIGHTS */
+    .glow-blue{
+      border-color: rgba(37,99,235,.95) !important;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.16), 0 18px 45px -35px rgba(2,6,23,.35);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .glow-red{
+      border-color: rgba(220,38,38,.95) !important;
+      box-shadow: 0 0 0 4px rgba(220,38,38,.12);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .glow-green{
+      border-color: rgba(22,163,74,.95) !important;
+      box-shadow: 0 0 0 4px rgba(22,163,74,.14);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+
+    /* SECTION CARDS */
+    .card-red{ border-top: 4px solid var(--aps-alert); background:#fff; }
+    .card-green{ border-top: 4px solid var(--aps-success); background:#fff; }
+
+    /* LIGHTBOX */
+    .lightbox{
+      position: fixed;
       inset: 0;
+      background: rgba(2,6,23,.72);
       display: none;
       align-items: center;
       justify-content: center;
-      color: #64748b;
-      border: 2px dashed #cbd5e1;
-      border-radius: 1rem;
-      margin: 12px;
-      text-align: center;
-      padding: 24px;
-      background: rgba(248, 250, 252, 0.85);
+      z-index: 2000;
+      padding: 18px;
     }
-
-    /* Botão Flutuante CTA */
-    .float-btn {
-      position: fixed;
-      right: 16px;
-      bottom: calc(16px + env(safe-area-inset-bottom));
-      z-index: 999;
-      background-color: var(--aps-blue);
-      color: #ffffff;
-      padding: 14px 24px;
+    .lightbox.is-open{ display:flex; }
+    .lightbox-panel{
+      width: min(980px, 96vw);
+      max-height: 86vh;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0b1220;
+      border: 1px solid rgba(148,163,184,.25);
+      box-shadow: 0 40px 90px -40px rgba(0,0,0,.85);
+      position: relative;
+    }
+    .lightbox-panel img{
+      width:100%;
+      height:100%;
+      object-fit: contain;
+      background: #0b1220;
+      display:block;
+    }
+    .lightbox-close{
+      position:absolute;
+      top:10px;
+      right:10px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      color:#fff;
       border-radius: 999px;
+      padding: 10px 12px;
       font-weight: 900;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
-      box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
-    .float-btn:hover { transform: scale(1.03); background-color: #1e40af; }
-    .float-btn.is-hidden { opacity: 0; pointer-events: none; }
 
-    /* Cards comparativos */
-    .card-red { border-top: 4px solid var(--aps-alert); background: #fff; }
-    .card-green { border-top: 4px solid var(--aps-success); background: #fff; }
+    /* NAV LOGO */
+    .brand-logo{
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: transparent;
+    }
   </style>
 </head>
 
 <body>
-  <!-- Config -->
   <script>
     const HOTMART_LINK = "https://pay.hotmart.com/C104598275Q?bid=1771875642350";
     const INSTAGRAM_LINK = "https://www.instagram.com/acs5374/";
   </script>
 
-  <!-- Botão Flutuante (leva para a oferta; CTA de compra está no botão verde) -->
+  <!-- Botão flutuante -->
   <a id="floatCta" href="#offer" class="float-btn" aria-label="Ir para oferta">
     <span aria-hidden="true">📘</span> GARANTIR MEU MANUAL
   </a>
 
   <!-- Navbar -->
-  <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50" style="border-color: var(--acs-line);">
-    <div class="container-safe py-4 flex justify-between items-center">
+  <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50" style="border-color: var(--line);">
+    <div class="container-safe py-4 flex justify-between items-center gap-4">
       <div class="font-black text-aps-blue flex items-center gap-2 tracking-tighter">
-        <span class="text-2xl" aria-hidden="true">🎯</span> APS 360
+        <!-- Sua LOGO (substitui o alvo). Coloque um arquivo "logo.png" ao lado do index.html -->
+        <img
+          src="logo.png"
+          alt="Logo APS 360"
+          class="brand-logo"
+          onerror="this.style.display='none'; document.getElementById('brandFallback').style.display='inline-flex';"
+        />
+        <span id="brandFallback" class="hidden items-center gap-2">
+          <span class="text-2xl" aria-hidden="true">🎯</span>
+        </span>
+        <span class="text-lg">APS 360</span>
       </div>
 
       <a href="#offer" class="text-xs font-black bg-aps-blue text-white px-5 py-2.5 rounded-full uppercase tracking-widest transition hover:opacity-90">
@@ -126,67 +267,82 @@
     </div>
   </nav>
 
-  <!-- Hero -->
-  <header class="py-16 md:py-24 relative overflow-hidden bg-white">
-    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-blue-50 rounded-full blur-3xl opacity-60 z-0"></div>
-
-    <div class="container-safe grid md:grid-cols-2 gap-12 items-center relative z-10">
+  <!-- HERO -->
+  <header class="hero-wrap py-14 md:py-20">
+    <div class="container-safe grid md:grid-cols-2 gap-12 items-center">
       <!-- Texto -->
       <div class="text-center md:text-left">
-        <span class="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 bg-blue-50 text-aps-blue border border-blue-200">
-          Guia Técnico Operacional
+        <span class="pill mb-5">
+          <span aria-hidden="true">📌</span> GUIA TÉCNICO OPERACIONAL
         </span>
 
-        <h1 class="text-4xl md:text-5xl font-black leading-tight mb-4" style="color: var(--acs-ink);">
-          Entenda o que mudou do Previne Brasil para a <span class="text-aps-blue underline italic">APS 360</span>.
+        <h1 class="hero-title text-4xl md:text-5xl font-black leading-[1.06] mb-5">
+          Entenda o que mudou do Previne Brasil para a
+          <span class="text-aps-blue underline italic">APS 360</span>.
         </h1>
 
-        <p class="mb-6 text-sm font-medium" style="color: var(--acs-muted);">
+        <p class="mb-7 text-[15px] md:text-[16px] font-medium leading-relaxed" style="color:var(--muted);">
           Manual prático e direto para ACS/TACS entenderem cálculo, vínculo, janela móvel e o que realmente pode zerar pontuação.
         </p>
 
         <!-- Informação importante -->
-        <div class="mb-6 rounded-2xl border border-blue-100 p-5 bg-blue-50">
+        <div class="info-card p-5 md:p-6 mb-6">
           <div class="flex items-start gap-3">
-            <span class="text-aps-blue font-bold mt-0.5 text-lg">ℹ️</span>
-            <p class="text-sm font-semibold text-slate-800">
-              Informação Importante:<br>
-              <span class="font-normal text-slate-700">Entender prazos de envio e validações do sistema é o que garante a contabilização do seu trabalho.</span>
-            </p>
+            <span class="text-aps-blue font-black mt-0.5 text-lg">ℹ️</span>
+            <div class="text-left">
+              <p class="text-sm font-black text-slate-900">Informação Importante:</p>
+              <p class="text-sm mt-1 text-slate-700">
+                Entender prazos de envio e validações do sistema é o que garante a contabilização do seu trabalho.
+              </p>
+            </div>
           </div>
         </div>
 
-        <!-- Lista curta -->
-        <ul class="text-sm font-semibold text-slate-700 space-y-2 mb-8 bg-slate-50 p-5 rounded-xl border border-slate-200 inline-block w-full text-left">
-          <li class="flex items-center gap-2"><span class="text-aps-blue text-lg">▪</span> Modelo fracionado por pontos</li>
-          <li class="flex items-center gap-2"><span class="text-aps-blue text-lg">▪</span> Janela móvel retroativa</li>
-          <li class="flex items-center gap-2"><span class="text-aps-blue text-lg">▪</span> Validação matemática automática</li>
-          <li class="flex items-center gap-2"><span class="text-aps-blue text-lg">▪</span> Intervalo mínimo entre visitas</li>
-        </ul>
+        <!-- Lista curta (mais “bonita” no mobile) -->
+        <div class="soft-card p-5 md:p-6 mb-8 text-left">
+          <ul class="text-sm font-semibold text-slate-700 space-y-3">
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Modelo fracionado por pontos
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Janela móvel retroativa
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Validação matemática automática
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Intervalo mínimo entre visitas
+            </li>
+          </ul>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-          <a href="#offer" class="bg-aps-blue text-white font-black px-8 py-4 rounded-xl transition-all text-center hover:scale-[1.02] shadow-lg shadow-blue-900/20">
-            DOMINAR O NOVO MODELO
-          </a>
+          <div class="mt-6 flex flex-col sm:flex-row gap-4">
+            <a href="#offer" class="bg-aps-blue text-white font-black px-8 py-4 rounded-xl transition-all text-center hover:scale-[1.02] shadow-lg shadow-blue-900/20">
+              DOMINAR O NOVO MODELO
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Imagem (substitui o placeholder) -->
-      <!-- Você vai criar depois: assets/capa-aps360.jpg -->
-      <div class="img-frame h-72 md:h-[500px]">
+      <!-- Imagem -->
+      <!-- Como você decidiu: imagem ao lado do index => "capa-aps360.jpg" -->
+      <div class="img-frame h-72 md:h-[500px]" id="heroFrame" role="button" tabindex="0" aria-label="Ampliar imagem">
         <img
           id="heroImg"
           src="capa-aps360.jpg"
           alt="Capa do Manual APS 360"
-          loading="lazy"
+          loading="eager"
           onerror="this.style.display='none'; document.getElementById('imgFallback').style.display='flex';"
         />
         <div id="imgFallback" class="img-fallback">
           <div>
             <div class="text-4xl mb-3">🖼️</div>
             <p class="font-black text-aps-blue">Imagem ainda não adicionada</p>
-            <p class="text-xs mt-2" style="color: var(--acs-muted);">
-              Envie sua capa como <b>assets/capa-aps360.jpg</b>
+            <p class="text-xs mt-2" style="color: var(--muted);">
+              Envie sua capa como <b>capa-aps360.jpg</b> (ao lado do index)
             </p>
           </div>
         </div>
@@ -194,20 +350,20 @@
     </div>
   </header>
 
-  <!-- Cenário comparativo -->
+  <!-- Comparativo -->
   <section class="py-16 bg-slate-50 border-y border-slate-200">
     <div class="container-safe">
       <div class="max-w-3xl mx-auto text-center mb-12">
         <h2 class="text-2xl md:text-3xl font-black mb-3 uppercase tracking-tighter text-aps-blue">
           Análise de Cenário: A Mudança de Jogo
         </h2>
-        <p class="text-sm" style="color: var(--acs-muted);">
+        <p class="text-sm" style="color: var(--muted);">
           O que funcionava ontem, hoje pode virar perda de repasse. Entenda a nova matriz.
         </p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-8">
-        <div class="card-red p-8 rounded-2xl shadow-sm border border-slate-200 relative">
+        <div id="cardPrevine" class="card-red p-8 rounded-2xl shadow-sm border border-slate-200 relative cursor-pointer select-none">
           <div class="absolute -top-4 left-6 bg-red-100 text-aps-alert text-xs font-black uppercase px-3 py-1 rounded-full border border-red-200">
             Passado
           </div>
@@ -217,9 +373,10 @@
             <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">⨯</span> Monitoramento mais raso e menos cruzamento de dados.</li>
             <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">⨯</span> Registro sem padrão técnico era “tolerado” na prática.</li>
           </ul>
+          <p class="mt-5 text-xs text-slate-400 font-semibold">Toque para destacar (borda vermelha).</p>
         </div>
 
-        <div class="card-green p-8 rounded-2xl shadow-lg border border-slate-200 relative bg-white">
+        <div id="cardAps" class="card-green p-8 rounded-2xl shadow-lg border border-slate-200 relative bg-white cursor-pointer select-none">
           <div class="absolute -top-4 left-6 bg-green-100 text-aps-success text-xs font-black uppercase px-3 py-1 rounded-full border border-green-200">
             Presente / Futuro
           </div>
@@ -229,6 +386,7 @@
             <li class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span> Mais rigor técnico: janela, validade, vínculo e produção.</li>
             <li class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span> Registro inconsistente pode ser invalidado no processamento.</li>
           </ul>
+          <p class="mt-5 text-xs text-slate-400 font-semibold">Toque para destacar (borda verde).</p>
         </div>
       </div>
     </div>
@@ -242,42 +400,45 @@
       </h2>
 
       <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300">
+        <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300 cursor-pointer select-none">
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-slate-200">🪪</div>
           <h3 class="font-black text-slate-800 mb-2">1. Capitação</h3>
           <p class="text-xs text-slate-500 leading-relaxed">
             Cadastro válido e atualizado. Dado inconsistente pode derrubar a base de cálculo.
           </p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para acender azul</p>
         </div>
 
-        <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 text-center hover:-translate-y-1 transition-transform border-t-4 border-aps-blue">
+        <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-aps-blue cursor-pointer select-none" style="border-top-color: var(--aps-blue); background: rgba(239,246,255,.45);">
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-blue-100">📍</div>
           <h3 class="font-black text-slate-800 mb-2">2. Vínculo</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
             Acompanhamento territorial com registro tecnicamente válido dentro da janela.
           </p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para acender azul</p>
         </div>
 
-        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300">
+        <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300 cursor-pointer select-none">
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-slate-200">📈</div>
           <h3 class="font-black text-slate-800 mb-2">3. Qualidade</h3>
           <p class="text-xs text-slate-500 leading-relaxed">
             Indicadores e validações que medem resultado e consistência de registro.
           </p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para acender azul</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Oferta -->
-  <section id="offer" class="py-24 text-center bg-slate-900 relative border-t-8 border-aps-blue">
+  <section id="offer" class="py-24 text-center bg-slate-900 relative border-t-8" style="border-top-color: var(--aps-blue);">
     <div class="container-safe">
       <div class="bg-white p-10 md:p-14 rounded-[2.5rem] border border-slate-200 max-w-xl mx-auto overflow-hidden relative shadow-2xl">
         <div class="absolute top-0 right-0 bg-aps-blue text-white px-6 py-2 font-black text-[10px] rounded-bl-2xl uppercase tracking-widest">
           Download Imediato
         </div>
 
-        <h2 class="text-3xl font-black mb-4 tracking-tighter" style="color: var(--acs-ink);">
+        <h2 class="text-3xl font-black mb-4 tracking-tighter" style="color: var(--ink);">
           Pare de trabalhar no escuro.
         </h2>
 
@@ -296,19 +457,20 @@
         </div>
 
         <div class="mb-8 mt-8">
-          <p class="text-aps-alert font-black text-xs uppercase tracking-widest mb-3 animate-pulse">
+          <p class="text-aps-alert font-black text-xs uppercase tracking-widest mb-3">
             Preço Especial de Lançamento
           </p>
           <p class="line-through font-bold text-slate-400 text-sm">R$ 39,90</p>
           <p class="text-5xl font-black tracking-tighter text-aps-blue">R$ 29,90</p>
         </div>
 
-        <!-- BOTÃO DE COMPRA (Hotmart) -->
+        <!-- BOTÃO DE COMPRA (Hotmart) - sempre aceso + pulse verde -->
         <a
+          id="buyBtn"
           href="https://pay.hotmart.com/C104598275Q?bid=1771875642350"
           target="_blank"
           rel="noopener"
-          class="block w-full bg-aps-success hover:bg-green-700 text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm transition-colors shadow-lg shadow-green-600/30"
+          class="cta-buy block w-full text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm transition-colors"
         >
           QUERO DOMINAR A APS 360
         </a>
@@ -320,7 +482,7 @@
     </div>
   </section>
 
-  <!-- Footer (com Instagram) -->
+  <!-- Footer -->
   <footer class="bg-slate-900 border-t border-slate-800 py-10 text-center">
     <div class="container-safe">
       <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase">
@@ -340,8 +502,16 @@
     </div>
   </footer>
 
+  <!-- Lightbox (expandir foto) -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Imagem ampliada">
+      <button id="lightboxClose" class="lightbox-close" type="button">Fechar ✕</button>
+      <img id="lightboxImg" src="" alt="Imagem ampliada" />
+    </div>
+  </div>
+
   <script>
-    // Oculta botão flutuante quando a oferta está visível
+    // 1) Oculta botão flutuante quando a oferta aparece
     window.addEventListener('load', () => {
       const floatCta = document.getElementById('floatCta');
       const offer = document.getElementById('offer');
@@ -350,14 +520,144 @@
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) floatCta.classList.add('is-hidden');
-          else floatCta.classList.remove('is-hidden');
+                    else floatCta.classList.remove('is-hidden');
         });
-      }, { threshold: 0.1 });
+      }, { threshold: 0.12 });
 
       observer.observe(offer);
     });
+
+    // Helpers: aplicar glow temporário
+    function flashGlow(el, className, ms = 650) {
+      if (!el) return;
+      el.classList.remove('glow-blue', 'glow-red', 'glow-green');
+      el.classList.add(className);
+      window.setTimeout(() => el.classList.remove(className), ms);
+    }
+
+    // 2) Pilares: borda “acende azul” ao tocar
+    (function setupPillarsGlow(){
+      const pillars = document.querySelectorAll('[data-pillar]');
+      if (!pillars || !pillars.length) return;
+
+      pillars.forEach(p => {
+        p.addEventListener('click', () => flashGlow(p, 'glow-blue', 750));
+        // teclado
+        p.setAttribute('tabindex', '0');
+        p.setAttribute('role', 'button');
+        p.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            flashGlow(p, 'glow-blue', 750);
+          }
+        });
+      });
+    })();
+
+    // 3) Cards: Previne vermelho / APS verde ao tocar
+    (function setupScenarioCards(){
+      const prev = document.getElementById('cardPrevine');
+      const aps  = document.getElementById('cardAps');
+
+      if (prev) {
+        prev.addEventListener('click', () => flashGlow(prev, 'glow-red', 800));
+        prev.setAttribute('tabindex', '0');
+        prev.setAttribute('role', 'button');
+        prev.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            flashGlow(prev, 'glow-red', 800);
+          }
+        });
+      }
+
+      if (aps) {
+        aps.addEventListener('click', () => flashGlow(aps, 'glow-green', 800));
+        aps.setAttribute('tabindex', '0');
+        aps.setAttribute('role', 'button');
+        aps.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            flashGlow(aps, 'glow-green', 800);
+          }
+        });
+      }
+    })();
+
+    // 4) Foto: clicar e expandir (lightbox)
+    (function setupLightbox(){
+      const frame = document.getElementById('heroFrame');
+      const img   = document.getElementById('heroImg');
+      const lb    = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      const close = document.getElementById('lightboxClose');
+
+      if (!frame || !img || !lb || !lbImg || !close) return;
+
+      function openLb(){
+        // se a imagem falhou, não abre
+        if (!img || img.style.display === 'none') return;
+
+        lbImg.src = img.src;
+        lb.classList.add('is-open');
+        lb.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLb(){
+        lb.classList.remove('is-open');
+        lb.setAttribute('aria-hidden', 'true');
+        lbImg.src = '';
+        document.body.style.overflow = '';
+      }
+
+      frame.addEventListener('click', openLb);
+      frame.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLb();
+        }
+        if (e.key === 'Escape') closeLb();
+      });
+
+      close.addEventListener('click', closeLb);
+
+      lb.addEventListener('click', (e) => {
+        // fecha clicando fora do painel
+        if (e.target === lb) closeLb();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lb.classList.contains('is-open')) closeLb();
+      });
+    })();
+
+    // 5) Botão de compra “apagado” no iOS: garantir visibilidade e evitar estados estranhos
+    (function fixBuyButtonVisibility(){
+      const btn = document.getElementById('buyBtn');
+      if (!btn) return;
+
+      // Força estilo inline em casos raros de override do navegador
+      btn.style.opacity = '1';
+      btn.style.filter = 'none';
+      btn.style.webkitFilter = 'none';
+
+      // iOS às vezes “reduz” animações/contraste. Se preferir, desliga pulse quando usuário tem reduce motion:
+      const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (media.matches) {
+        btn.style.animation = 'none';
+      }
+    })();
+
+    // 6) Se quiser, você pode apontar links a partir das constantes (opcional)
+    (function wireLinks(){
+      const buyBtn = document.getElementById('buyBtn');
+      if (buyBtn && typeof HOTMART_LINK === 'string') buyBtn.href = HOTMART_LINK;
+
+      // Exemplo: se quiser que o botão do topo abra instagram em outro lugar, você pode criar um id e setar aqui.
+      // const ig = document.getElementById('igLink');
+      // if (ig && typeof INSTAGRAM_LINK === 'string') ig.href = INSTAGRAM_LINK;
+    })();
   </script>
 </body>
 </html>
-
-
