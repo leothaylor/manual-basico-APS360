@@ -222,18 +222,21 @@
       text-transform: uppercase;
     }
 
-    /* NAV LOGO */
-    .brand-logo{
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
+    /* NAV LOGO (AJUSTADO PARA OCUPAR A FAIXA TODA À ESQUERDA) */
+    .nav-logo{
+      height: 46px;
+      width: 100%;
       object-fit: contain;
-      background: transparent;
+      object-position: left center;
+      display: block;
+    }
+    @media (min-width: 768px){
+      .nav-logo{ height: 54px; }
     }
   </style>
 </head>
 
-<body>
+<body id="top">
   <script>
     const HOTMART_LINK = "https://pay.hotmart.com/C104598275Q?bid=1771875642350";
     const INSTAGRAM_LINK = "https://www.instagram.com/acs5374/";
@@ -246,18 +249,17 @@
 
   <!-- Navbar -->
   <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50" style="border-color: var(--line);">
-    <div class="container-safe py-4 flex justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <!-- Sua LOGO (substitui o alvo). Coloque um arquivo "logo.png" ao lado do index.html -->
+    <div class="container-safe py-3 flex items-center justify-between gap-4">
+      <!-- LOGO (ocupa a faixa branca à esquerda inteira) -->
+      <a href="#top" class="flex-1 min-w-0" aria-label="Voltar ao topo">
         <img
           src="logo.png"
           alt="Logo APS 360"
-          class="brand-logo"
-          onerror="this.style.display='none'; document.getElementById('brandFallback').style.display='inline-flex';"
+          class="nav-logo"
         />
-      </div>
+      </a>
 
-      <a href="#offer" class="text-xs font-black bg-aps-blue text-white px-5 py-2.5 rounded-full uppercase tracking-widest transition hover:opacity-90">
+      <a href="#offer" class="text-xs font-black bg-aps-blue text-white px-5 py-2.5 rounded-full uppercase tracking-widest transition hover:opacity-90 whitespace-nowrap">
         Acessar Manual
       </a>
     </div>
@@ -324,7 +326,7 @@
       </div>
 
       <!-- Imagem -->
-      <!-- Como você decidiu: imagem ao lado do index => "capa-aps360.jpg" -->
+      <!-- imagem ao lado do index => "capa-aps360.jpg" -->
       <div class="img-frame h-72 md:h-[500px]" id="heroFrame" role="button" tabindex="0" aria-label="Ampliar imagem">
         <img
           id="heroImg"
@@ -516,145 +518,83 @@
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) floatCta.classList.add('is-hidden');
-                    else floatCta.classList.remove('is-hidden');
+          else floatCta.classList.remove('is-hidden');
         });
-      }, { threshold: 0.12 });
+      }, { threshold: 0.1 });
 
       observer.observe(offer);
     });
 
-    // Helpers: aplicar glow temporário
-    function flashGlow(el, className, ms = 650) {
-      if (!el) return;
-      el.classList.remove('glow-blue', 'glow-red', 'glow-green');
-      el.classList.add(className);
-      window.setTimeout(() => el.classList.remove(className), ms);
-    }
+    // 2) Click highlight: pilares (borda acende azul ao tocar)
+    (function(){
+      const pillars = Array.from(document.querySelectorAll('[data-pillar]'));
+      if(!pillars.length) return;
 
-    // 2) Pilares: borda “acende azul” ao tocar
-    (function setupPillarsGlow(){
-      const pillars = document.querySelectorAll('[data-pillar]');
-      if (!pillars || !pillars.length) return;
+      const flash = (el, cls='glow-blue') => {
+        el.classList.add(cls);
+        window.setTimeout(()=> el.classList.remove(cls), 550);
+      };
 
       pillars.forEach(p => {
-        p.addEventListener('click', () => flashGlow(p, 'glow-blue', 750));
-        // teclado
-        p.setAttribute('tabindex', '0');
-        p.setAttribute('role', 'button');
+        p.addEventListener('click', () => flash(p, 'glow-blue'));
         p.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            flashGlow(p, 'glow-blue', 750);
-          }
+          if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flash(p, 'glow-blue'); }
         });
+        p.setAttribute('tabindex','0');
+        p.setAttribute('role','button');
+        p.setAttribute('aria-label','Destacar pilar');
       });
     })();
 
-    // 3) Cards: Previne vermelho / APS verde ao tocar
-    (function setupScenarioCards(){
+    // 3) Click highlight: comparativo (previne vermelho / aps verde)
+    (function(){
       const prev = document.getElementById('cardPrevine');
       const aps  = document.getElementById('cardAps');
+      if(!prev || !aps) return;
 
-      if (prev) {
-        prev.addEventListener('click', () => flashGlow(prev, 'glow-red', 800));
-        prev.setAttribute('tabindex', '0');
-        prev.setAttribute('role', 'button');
-        prev.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            flashGlow(prev, 'glow-red', 800);
-          }
-        });
-      }
+      const pulse = (el, cls) => {
+        el.classList.add(cls);
+        window.setTimeout(()=> el.classList.remove(cls), 650);
+      };
 
-      if (aps) {
-        aps.addEventListener('click', () => flashGlow(aps, 'glow-green', 800));
-        aps.setAttribute('tabindex', '0');
-        aps.setAttribute('role', 'button');
-        aps.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            flashGlow(aps, 'glow-green', 800);
-          }
-        });
-      }
+      prev.addEventListener('click', ()=> pulse(prev, 'glow-red'));
+      aps.addEventListener('click',  ()=> pulse(aps, 'glow-green'));
+
+      prev.setAttribute('tabindex','0'); prev.setAttribute('role','button');
+      aps.setAttribute('tabindex','0');  aps.setAttribute('role','button');
+
+      prev.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pulse(prev,'glow-red'); }});
+      aps.addEventListener('keydown',  (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pulse(aps,'glow-green'); }});
     })();
 
-    // 4) Foto: clicar e expandir (lightbox)
-    (function setupLightbox(){
+    // 4) Lightbox: clicar imagem do hero para expandir
+    (function(){
       const frame = document.getElementById('heroFrame');
       const img   = document.getElementById('heroImg');
       const lb    = document.getElementById('lightbox');
       const lbImg = document.getElementById('lightboxImg');
       const close = document.getElementById('lightboxClose');
+      if(!frame || !img || !lb || !lbImg || !close) return;
 
-      if (!frame || !img || !lb || !lbImg || !close) return;
-
-      function openLb(){
-        // se a imagem falhou, não abre
-        if (!img || img.style.display === 'none') return;
-
-        lbImg.src = img.src;
+      const open = () => {
+        if(img.style.display === 'none') return;
+        lbImg.src = img.currentSrc || img.src;
         lb.classList.add('is-open');
-        lb.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeLb(){
+        lb.setAttribute('aria-hidden','false');
+        close.focus();
+      };
+      const shut = () => {
         lb.classList.remove('is-open');
-        lb.setAttribute('aria-hidden', 'true');
+        lb.setAttribute('aria-hidden','true');
         lbImg.src = '';
-        document.body.style.overflow = '';
-      }
+      };
 
-      frame.addEventListener('click', openLb);
-      frame.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openLb();
-        }
-        if (e.key === 'Escape') closeLb();
-      });
-
-      close.addEventListener('click', closeLb);
-
-      lb.addEventListener('click', (e) => {
-        // fecha clicando fora do painel
-        if (e.target === lb) closeLb();
-      });
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lb.classList.contains('is-open')) closeLb();
-      });
-    })();
-
-    // 5) Botão de compra “apagado” no iOS: garantir visibilidade e evitar estados estranhos
-    (function fixBuyButtonVisibility(){
-      const btn = document.getElementById('buyBtn');
-      if (!btn) return;
-
-      // Força estilo inline em casos raros de override do navegador
-      btn.style.opacity = '1';
-      btn.style.filter = 'none';
-      btn.style.webkitFilter = 'none';
-
-      // iOS às vezes “reduz” animações/contraste. Se preferir, desliga pulse quando usuário tem reduce motion:
-      const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (media.matches) {
-        btn.style.animation = 'none';
-      }
-    })();
-
-    // 6) Se quiser, você pode apontar links a partir das constantes (opcional)
-    (function wireLinks(){
-      const buyBtn = document.getElementById('buyBtn');
-      if (buyBtn && typeof HOTMART_LINK === 'string') buyBtn.href = HOTMART_LINK;
-
-      // Exemplo: se quiser que o botão do topo abra instagram em outro lugar, você pode criar um id e setar aqui.
-      // const ig = document.getElementById('igLink');
-      // if (ig && typeof INSTAGRAM_LINK === 'string') ig.href = INSTAGRAM_LINK;
+      frame.addEventListener('click', open);
+      frame.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); }});
+      close.addEventListener('click', shut);
+      lb.addEventListener('click', (e)=>{ if(e.target === lb) shut(); });
+      window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && lb.classList.contains('is-open')) shut(); });
     })();
   </script>
 </body>
 </html>
-
