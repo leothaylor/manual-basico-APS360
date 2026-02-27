@@ -120,7 +120,7 @@
       cursor: default;
     }
 
-    /* FLOAT CTA */
+    /* FLOAT CTA (tradicional) */
     .float-btn{
       position:fixed;
       right:16px;
@@ -140,6 +140,41 @@
     }
     .float-btn:hover{ transform: scale(1.03); background-color: var(--aps-blue-2); }
     .float-btn.is-hidden{ opacity:0; pointer-events:none; }
+
+    /* NOVO BOTÃO FLUTUANTE (mobile) - compra direta com valor */
+    .float-buy{
+      position:fixed;
+      left: 16px;
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 1000;
+      display:none; /* só aparece no mobile */
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 16px 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color:#fff;
+      background: var(--aps-success);
+      box-shadow: 0 18px 40px -18px rgba(22,163,74,.65);
+      transition: transform .15s ease, background-color .15s ease;
+      outline: none;
+      border: none;
+      animation: greenPulse 2.6s ease-in-out infinite;
+      -webkit-user-select:none;
+      user-select:none;
+    }
+    .float-buy:hover{ transform: scale(1.01); background:#15803d; }
+
+    /* só no mobile: mostra o comprar e esconde o flutuante tradicional */
+    @media (max-width: 767px){
+      .float-buy{ display:flex; }
+      #floatCta{ display:none !important; }
+    }
 
     /* PURCHASE CTA ALWAYS VISIBLE + slow green pulse */
     .cta-buy{
@@ -242,9 +277,19 @@
     const INSTAGRAM_LINK = "https://www.instagram.com/acs5374/";
   </script>
 
-  <!-- Botão flutuante -->
+  <!-- Botão flutuante (tradicional) -->
   <a id="floatCta" href="#offer" class="float-btn" aria-label="Ir para oferta">
     <span aria-hidden="true">📘</span> GARANTIR MEU MANUAL
+  </a>
+
+  <!-- NOVO botão flutuante (mobile) — compra direta com valor -->
+  <a
+    id="floatBuy"
+    href="https://pay.hotmart.com/C104598275Q?bid=1771875642350"
+    class="float-buy"
+    aria-label="Comprar agora por R$ 29,90 e ir direto ao carrinho"
+  >
+    <span aria-hidden="true">🛒</span> GARANTA JÁ • R$ 29,90
   </a>
 
   <!-- Navbar -->
@@ -509,7 +554,7 @@
   </div>
 
   <script>
-    // 1) Oculta botão flutuante quando a oferta aparece
+    // 1) Oculta botão flutuante quando a oferta aparece (somente o tradicional)
     window.addEventListener('load', () => {
       const floatCta = document.getElementById('floatCta');
       const offer = document.getElementById('offer');
