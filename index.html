@@ -213,6 +213,82 @@
     .card-red{ border-top: 4px solid var(--aps-alert); background:#fff; }
     .card-green{ border-top: 4px solid var(--aps-success); background:#fff; }
 
+    /* ===========================
+       PROVAS SOCIAIS (CARROSSEL)
+       =========================== */
+    .proofs-track{
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: min(320px, 80vw);
+      gap: 14px;
+      overflow-x: auto;
+      padding: 6px 4px 14px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .proofs-track::-webkit-scrollbar{ height: 8px; }
+    .proofs-track::-webkit-scrollbar-track{ background: rgba(2,6,23,.04); border-radius: 999px; }
+    .proofs-track::-webkit-scrollbar-thumb{ background: rgba(30,58,138,.50); border-radius: 999px; }
+
+    .proof-card{
+      scroll-snap-align: start;
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 18px 45px -35px rgba(2,6,23,.35);
+    }
+    .proof-head{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255,255,255,.94);
+    }
+    .proof-tag{
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .proof-badge{
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--aps-blue);
+      background: rgba(239,246,255,.95);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(191,219,254,.9);
+      white-space: nowrap;
+    }
+    .proof-img{
+      width: 100%;
+      height: 420px;
+      background: #f1f5f9;
+      cursor: zoom-in;
+      user-select:none;
+    }
+    .proof-img img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .proof-foot{
+      padding: 12px 14px 14px;
+    }
+    .proof-foot p{
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
     /* LIGHTBOX */
     .lightbox{
       position: fixed;
@@ -462,7 +538,7 @@
         </div>
 
         <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300 cursor-pointer select-none">
-          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-slate-200">📈</div>
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-content:center mx-auto mb-4 text-xl border border-slate-200">📈</div>
           <h3 class="font-black text-slate-800 mb-2">3. Qualidade</h3>
           <p class="text-xs text-slate-500 leading-relaxed">
             Indicadores e validações que medem resultado e consistência de registro.
@@ -470,6 +546,79 @@
           <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para acender azul</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       PROVAS SOCIAIS (NOVA SEÇÃO)
+       =========================== -->
+  <section id="provas" class="py-16 bg-slate-50 border-y border-slate-200">
+    <div class="container-safe">
+      <div class="max-w-3xl mx-auto text-center mb-10">
+        <span class="pill mb-4">
+          <span aria-hidden="true">✅</span> PROVA REAL
+        </span>
+
+        <h2 class="text-2xl md:text-3xl font-black mb-3 uppercase tracking-tighter text-aps-blue">
+          Quem já ouviu, entendeu.
+        </h2>
+
+        <p class="text-sm" style="color: var(--muted);">
+          Sem promessa. Sem hype. Só a confirmação de quem já viu a regra e percebeu o impacto.
+        </p>
+      </div>
+
+      <div class="proofs-track" aria-label="Carrossel de provas sociais (arraste para o lado)">
+        <!-- CARD 01 (ATUAL) -->
+        <article class="proof-card">
+          <div class="proof-head">
+            <span class="proof-tag">WhatsApp</span>
+            <span class="proof-badge">ÁUDIO</span>
+          </div>
+
+          <div
+            class="proof-img"
+            role="button"
+            tabindex="0"
+            aria-label="Ampliar prova social"
+            data-lightbox-src="prova-aps-01.jpg"
+          >
+            <img src="prova-aps-01.jpg" alt="Prova social: mensagem e áudio (WhatsApp)" />
+          </div>
+
+          <div class="proof-foot">
+            <p><b style="color:var(--ink);">Mudança percebida.</b> Quando a lógica encaixa, o medo de erro diminui.</p>
+          </div>
+        </article>
+
+        <!-- CARD FUTURO (MODELO) — deixei pronto, mas desativado (não aparece) -->
+        <!--
+        <article class="proof-card">
+          <div class="proof-head">
+            <span class="proof-tag">WhatsApp</span>
+            <span class="proof-badge">RESULTADO</span>
+          </div>
+
+          <div
+            class="proof-img"
+            role="button"
+            tabindex="0"
+            aria-label="Ampliar prova social"
+            data-lightbox-src="prova-aps-02.jpg"
+          >
+            <img src="prova-aps-02.jpg" alt="Prova social: depoimento (WhatsApp)" />
+          </div>
+
+          <div class="proof-foot">
+            <p>Texto curto aqui.</p>
+          </div>
+        </article>
+        -->
+      </div>
+
+      <p class="text-center text-[11px] mt-4 font-semibold text-slate-400">
+        Arraste para o lado. (Este bloco aceita várias provas no futuro.)
+      </p>
     </div>
   </section>
 
@@ -639,6 +788,32 @@
       close.addEventListener('click', shut);
       lb.addEventListener('click', (e)=>{ if(e.target === lb) shut(); });
       window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && lb.classList.contains('is-open')) shut(); });
+    })();
+
+    // 5) Lightbox: prova social (mesmo lightbox já existente)
+    (function(){
+      const lb    = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      const close = document.getElementById('lightboxClose');
+      if(!lb || !lbImg || !close) return;
+
+      const openProof = (src) => {
+        if(!src) return;
+        lbImg.src = src;
+        lb.classList.add('is-open');
+        lb.setAttribute('aria-hidden','false');
+        close.focus();
+      };
+
+      document.querySelectorAll('[data-lightbox-src]').forEach(el => {
+        el.addEventListener('click', () => openProof(el.getAttribute('data-lightbox-src')));
+        el.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            openProof(el.getAttribute('data-lightbox-src'));
+          }
+        });
+      });
     })();
   </script>
 </body>
