@@ -21,6 +21,8 @@
       --muted:#475569;
       --line:#e2e8f0;
       --card:#ffffff;
+
+      --pre-bg: var(--bg);
     }
 
     html,body{ height:100%; }
@@ -31,7 +33,11 @@
       overflow-x:hidden;
       scroll-behavior:smooth;
       -webkit-tap-highlight-color: transparent;
+      padding-bottom: calc(84px + env(safe-area-inset-bottom));
     }
+
+    /* Scroll offset para âncoras (menu sticky) */
+    section[id], header[id], div[id]{ scroll-margin-top: 92px; }
 
     .container-safe{
       width:100%;
@@ -70,9 +76,7 @@
       color: var(--aps-blue);
     }
 
-    .hero-title{
-      letter-spacing:-0.03em;
-    }
+    .hero-title{ letter-spacing:-0.03em; }
 
     .soft-card{
       background: var(--card);
@@ -120,6 +124,28 @@
       cursor: default;
     }
 
+    /* Overlay “clique para ampliar” (igual lógica do Kit) */
+    .img-overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      padding: 10px;
+      pointer-events:none;
+    }
+    .img-overlay span{
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      background: rgba(15,23,42,.72);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+    }
+
     /* FLOAT CTA (tradicional) */
     .float-btn{
       position:fixed;
@@ -148,7 +174,7 @@
       right: 16px;
       bottom: calc(16px + env(safe-area-inset-bottom));
       z-index: 1000;
-      display:none; /* só aparece no mobile */
+      display:none;
       align-items:center;
       justify-content:center;
       gap:10px;
@@ -164,7 +190,6 @@
       transition: transform .15s ease, background-color .15s ease;
       outline: none;
       border: none;
-      animation: greenPulse 2.6s ease-in-out infinite;
       -webkit-user-select:none;
       user-select:none;
     }
@@ -176,21 +201,49 @@
       #floatCta{ display:none !important; }
     }
 
-    /* PURCHASE CTA ALWAYS VISIBLE + slow green pulse */
+    /* CTA principal com shine (acabamento) */
+    .cta-main{
+      position: relative;
+      overflow: hidden;
+      transform: translateZ(0);
+      transition: transform .25s ease, background-color .25s ease, outline-color .25s ease;
+      outline: 2px solid rgba(30,58,138,.22);
+      outline-offset: 0px;
+      -webkit-user-select:none;
+      user-select:none;
+    }
+    .cta-main::after{
+      content:"";
+      position:absolute;
+      top:-40%;
+      left:-60%;
+      width: 40%;
+      height: 180%;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.55), rgba(255,255,255,0));
+      transform: skewX(-18deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .cta-main.shine::after{ animation: shine 1.05s ease-in-out; }
+    @keyframes shine{
+      0%{ left:-60%; opacity: 0; }
+      15%{ opacity: .9; }
+      100%{ left: 120%; opacity: 0; }
+    }
+    .cta-main:hover{ transform: scale(1.02); }
+    .cta-main:active{ transform: scale(0.98); }
+
+    /* Compra verde: mantém sua identidade, mas com acabamento e menos “gritaria” */
     .cta-buy{
       background: var(--aps-success);
       box-shadow: 0 18px 40px -18px rgba(22,163,74,.65);
-      outline: none;
-      border: none;
+      border: 1px solid rgba(2,6,23,.10);
       opacity: 1 !important;
       filter: none !important;
-      animation: greenPulse 2.6s ease-in-out infinite;
+      transition: transform .20s ease, background-color .20s ease, box-shadow .20s ease;
     }
-    .cta-buy:hover{ background:#15803d; }
-    @keyframes greenPulse{
-      0%,100% { transform: translateZ(0) scale(1); box-shadow: 0 18px 40px -18px rgba(22,163,74,.65); }
-      50%     { transform: translateZ(0) scale(1.01); box-shadow: 0 22px 55px -22px rgba(22,163,74,.85); }
-    }
+    .cta-buy:hover{ background:#15803d; transform: scale(1.01); }
+    .cta-buy:active{ transform: scale(0.98); }
 
     /* CLICK HIGHLIGHTS */
     .glow-blue{
@@ -272,6 +325,7 @@
       background: #f1f5f9;
       cursor: zoom-in;
       user-select:none;
+      position: relative;
     }
     .proof-img img{
       width: 100%;
@@ -279,59 +333,151 @@
       object-fit: cover;
       display: block;
     }
-    .proof-foot{
-      padding: 12px 14px 14px;
-    }
-    .proof-foot p{
-      margin: 0;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
 
-    /* LIGHTBOX */
-    .lightbox{
+    /* ===========================
+       MODAL IMAGENS (card clean com título)
+       =========================== */
+    .modal-backdrop{
       position: fixed;
       inset: 0;
-      background: rgba(2,6,23,.72);
+      background: rgba(2,6,23,0.70);
+      backdrop-filter: blur(8px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 2000;
       padding: 18px;
     }
-    .lightbox.is-open{ display:flex; }
-    .lightbox-panel{
+    .modal-backdrop.is-open{ display: flex; }
+
+    .modal-card{
       width: min(980px, 96vw);
-      max-height: 86vh;
-      border-radius: 18px;
+      max-height: 90vh;
       overflow: hidden;
-      background: #0b1220;
-      border: 1px solid rgba(148,163,184,.25);
-      box-shadow: 0 40px 90px -40px rgba(0,0,0,.85);
-      position: relative;
-    }
-    .lightbox-panel img{
-      width:100%;
-      height:100%;
-      object-fit: contain;
-      background: #0b1220;
-      display:block;
-    }
-    .lightbox-close{
-      position:absolute;
-      top:10px;
-      right:10px;
-      background: rgba(255,255,255,.12);
+      border-radius: 20px;
+      background: #ffffff;
       border: 1px solid rgba(255,255,255,.18);
-      color:#fff;
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .modal-top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      gap: 10px;
+    }
+    .modal-title{
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 75%;
+    }
+    .modal-close{
+      background: rgba(2,6,23,.06);
+      border: 1px solid rgba(2,6,23,.08);
       border-radius: 999px;
       padding: 10px 12px;
       font-weight: 900;
       font-size: 12px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+      color: var(--ink);
+      cursor: pointer;
+      white-space: nowrap;
     }
+    .modal-close:hover{ background: rgba(2,6,23,.10); }
+    .modal-body{
+      padding: 10px;
+      overflow: auto;
+      background: #0b1220;
+    }
+    .modal-body img{
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    /* ===========================
+       FAQ acordeão
+       =========================== */
+    .faq-item{ border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+    .faq-btn{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: left;
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--ink);
+      padding: 12px 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .faq-icon{
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.80);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      transition: transform .25s ease;
+      font-weight: 900;
+      color: var(--muted);
+    }
+    .faq-item.is-open .faq-icon{ transform: rotate(45deg); }
+    .faq-panel{ max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-panel p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      padding-bottom: 10px;
+    }
+
+    /* ===========================
+       Trust badges (Offer)
+       =========================== */
+    .trust{ margin-top: 14px; display: grid; gap: 8px; text-align: left; }
+    .trust-item{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(2,6,23,.08);
+      background: rgba(255,255,255,.90);
+    }
+    .trust-ico{
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(30,58,138,.30);
+      background: rgba(239,246,255,.75);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--aps-blue);
+    }
+    .trust-txt{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+    .trust-txt b{ color: var(--ink); }
 
     /* NAV LOGO (AJUSTADO PARA OCUPAR A FAIXA TODA À ESQUERDA) */
     .nav-logo{
@@ -344,6 +490,190 @@
     @media (min-width: 768px){
       .nav-logo{ height: 54px; }
     }
+
+    /* ===========================
+       PRELOADER (com logo.png)
+       =========================== */
+    #preloader{
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      background: var(--pre-bg);
+      transition: opacity .45s ease, visibility .45s ease;
+    }
+    #preloader.hidden{
+      opacity: 0;
+      visibility: hidden;
+    }
+    .spinner{
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: grid;
+      place-items: center;
+    }
+    .spinner-svg{ width: 120px; height: 120px; }
+    .spinner-track{
+      fill: none;
+      stroke: rgba(30,58,138,.10);
+      stroke-width: 6;
+    }
+    .spinner-arc{
+      fill: none;
+      stroke: rgba(30,58,138,.85);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 78 260;
+      stroke-dashoffset: 0;
+      transform-origin: 60px 60px;
+      animation: spinArc 1.05s ease-in-out infinite;
+    }
+    @keyframes spinArc{
+      0%   { transform: rotate(0deg);   stroke-dasharray: 40 260;  opacity: .95; }
+      50%  { transform: rotate(180deg); stroke-dasharray: 95 260;  opacity: 1; }
+      100% { transform: rotate(360deg); stroke-dasharray: 40 260;  opacity: .95; }
+    }
+    .spinner-ring{
+      opacity: 0;
+      transform-origin: 60px 60px;
+      transform: scale(.96);
+      animation: ringIn .55s ease forwards;
+      animation-delay: .75s;
+    }
+    @keyframes ringIn{ to{ opacity: 1; transform: scale(1); } }
+    .ring-outer{ fill: none; stroke: rgba(30,58,138,.32); stroke-width: 2.5; }
+    .ring-inner{ fill: none; stroke: rgba(30,58,138,.16); stroke-width: 2; }
+    .spinner-logo{
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: scale(.92);
+      animation: logoIn .55s ease forwards;
+      animation-delay: .85s;
+    }
+    .spinner-logo img{
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display: block;
+      background: transparent;
+    }
+    @keyframes logoIn{ to{ opacity: 1; transform: scale(1); } }
+    .spinner-pulse{
+      position: absolute;
+      inset: -8px;
+      border-radius: 999px;
+      border: 1px solid rgba(30,58,138,.10);
+      opacity: 0;
+      pointer-events: none;
+      animation: pulseRing 1.25s ease-out infinite;
+      animation-delay: 1.05s;
+    }
+    @keyframes pulseRing{
+      0%{ opacity: 0; transform: scale(.92); }
+      35%{ opacity: .55; }
+      100%{ opacity: 0; transform: scale(1.08); }
+    }
+
+    /* ===========================
+       Exit intent modal (por scroll)
+       =========================== */
+    #exitModal{
+      position: fixed;
+      inset: 0;
+      z-index: 2100;
+      background: rgba(2,6,23,.70);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    #exitModal.show{ display: flex; }
+    .exit-card{
+      width: min(520px, 96vw);
+      border-radius: 24px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(255,255,255,.18);
+      overflow: hidden;
+    }
+    .exit-top{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(2,6,23,.08);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .exit-title{
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .exit-x{
+      border-radius: 999px;
+      padding: 10px 12px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(2,6,23,.05);
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .exit-body{ padding: 16px; text-align: left; }
+    .exit-body h3{
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--ink);
+      margin: 0 0 8px 0;
+    }
+    .exit-body p{
+      margin: 0 0 14px 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .exit-actions{ display:grid; gap: 10px; }
+    .exit-primary{
+      display:block;
+      width: 100%;
+      text-align:center;
+      background: var(--aps-blue);
+      color: #fff;
+      font-weight: 900;
+      border-radius: 18px;
+      padding: 14px 16px;
+      border: 1px solid rgba(2,6,23,.08);
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      transition: transform .25s ease, background-color .25s ease;
+    }
+    .exit-primary:hover{ background: var(--aps-blue-2); transform: scale(1.02); }
+    .exit-secondary{
+      display:block;
+      width: 100%;
+      text-align:center;
+      background: rgba(239,246,255,.80);
+      color: var(--ink);
+      font-weight: 900;
+      border-radius: 18px;
+      padding: 14px 16px;
+      border: 1px solid rgba(191,219,254,.9);
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    }
   </style>
 </head>
 
@@ -353,8 +683,26 @@
     const INSTAGRAM_LINK = "https://www.instagram.com/acs5374/";
   </script>
 
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <div class="spinner" role="status" aria-label="Carregando">
+      <svg class="spinner-svg" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="spinner-track" cx="60" cy="60" r="42"></circle>
+        <circle class="spinner-arc" cx="60" cy="60" r="42"></circle>
+        <g class="spinner-ring">
+          <circle class="ring-outer" cx="60" cy="60" r="44"></circle>
+          <circle class="ring-inner" cx="60" cy="60" r="36"></circle>
+        </g>
+      </svg>
+      <div class="spinner-logo" aria-hidden="true">
+        <img src="logo.png" alt="" />
+      </div>
+      <div class="spinner-pulse" aria-hidden="true"></div>
+    </div>
+  </div>
+
   <!-- Botão flutuante (tradicional) -->
-  <a id="floatCta" href="#offer" class="float-btn" aria-label="Ir para oferta">
+  <a id="floatCta" href="#offer" class="float-btn cta-main" aria-label="Ir para oferta">
     <span aria-hidden="true">📘</span> GARANTIR MEU MANUAL
   </a>
 
@@ -371,23 +719,18 @@
   <!-- Navbar -->
   <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50" style="border-color: var(--line);">
     <div class="container-safe py-3 flex items-center justify-between gap-4">
-      <!-- LOGO (ocupa a faixa branca à esquerda inteira) -->
       <a href="#top" class="flex-1 min-w-0" aria-label="Voltar ao topo">
-        <img
-          src="logo.png"
-          alt="Logo APS 360"
-          class="nav-logo"
-        />
+        <img src="logo.png" alt="Logo APS 360" class="nav-logo" />
       </a>
 
-      <a href="#offer" class="text-xs font-black bg-aps-blue text-white px-5 py-2.5 rounded-full uppercase tracking-widest transition hover:opacity-90 whitespace-nowrap">
+      <a href="#offer" class="text-xs font-black bg-aps-blue text-white px-5 py-2.5 rounded-full uppercase tracking-widest transition hover:opacity-90 whitespace-nowrap cta-main">
         Acessar Manual
       </a>
     </div>
   </nav>
 
   <!-- HERO -->
-  <header class="hero-wrap py-14 md:py-20">
+  <header class="hero-wrap py-14 md:py-20" id="hero">
     <div class="container-safe grid md:grid-cols-2 gap-12 items-center">
       <!-- Texto -->
       <div class="text-center md:text-left">
@@ -400,9 +743,24 @@
           <span class="text-aps-blue underline italic">APS 360</span>.
         </h1>
 
-        <p class="mb-7 text-[15px] md:text-[16px] font-medium leading-relaxed" style="color:var(--muted);">
+        <p class="mb-6 text-[15px] md:text-[16px] font-medium leading-relaxed" style="color:var(--muted);">
           Manual prático e direto para ACS/TACS entenderem cálculo, vínculo, janela móvel e o que realmente pode zerar pontuação.
         </p>
+
+        <!-- O que vem no PDF (novo) -->
+        <div class="soft-card p-5 md:p-6 mb-6 text-left" style="background: rgba(255,255,255,.92);">
+          <p class="text-[11px] font-black uppercase tracking-widest mb-3" style="color: var(--muted);">
+            O que você recebe (PDF)
+          </p>
+          <ul class="text-sm font-semibold text-slate-700 space-y-2">
+            <li class="flex items-start gap-2"><span aria-hidden="true">✅</span><span>Explicação do modelo fracionado e onde a pontuação cai.</span></li>
+            <li class="flex items-start gap-2"><span aria-hidden="true">✅</span><span>Janela móvel e validações: o que entra e o que é invalidado.</span></li>
+            <li class="flex items-start gap-2"><span aria-hidden="true">✅</span><span>Leitura operacional: vínculo, prazos e risco de “trabalhar no escuro”.</span></li>
+          </ul>
+          <p class="mt-3 text-xs" style="color: var(--muted);">
+            Sem hype. É regra aplicada no território.
+          </p>
+        </div>
 
         <!-- Informação importante -->
         <div class="info-card p-5 md:p-6 mb-6">
@@ -417,7 +775,7 @@
           </div>
         </div>
 
-        <!-- Lista curta (mais “bonita” no mobile) -->
+        <!-- Lista curta -->
         <div class="soft-card p-5 md:p-6 mb-8 text-left">
           <ul class="text-sm font-semibold text-slate-700 space-y-3">
             <li class="flex items-center gap-3">
@@ -439,7 +797,7 @@
           </ul>
 
           <div class="mt-6 flex flex-col sm:flex-row gap-4">
-            <a href="#offer" class="bg-aps-blue text-white font-black px-8 py-4 rounded-xl transition-all text-center hover:scale-[1.02] shadow-lg shadow-blue-900/20">
+            <a href="#offer" class="bg-aps-blue text-white font-black px-8 py-4 rounded-xl text-center shadow-lg shadow-blue-900/20 cta-main" id="heroPrimaryCta">
               DOMINAR O NOVO MODELO
             </a>
           </div>
@@ -447,8 +805,8 @@
       </div>
 
       <!-- Imagem -->
-      <!-- imagem ao lado do index => "capa-aps360.jpg" -->
-      <div class="img-frame h-72 md:h-[500px]" id="heroFrame" role="button" tabindex="0" aria-label="Ampliar imagem">
+      <div class="img-frame h-72 md:h-[500px]" id="heroFrame" role="button" tabindex="0" aria-label="Ampliar imagem"
+           data-modal-src="capa-aps360.jpg" data-modal-title="Capa do Manual APS 360">
         <img
           id="heroImg"
           src="capa-aps360.jpg"
@@ -456,6 +814,7 @@
           loading="eager"
           onerror="this.style.display='none'; document.getElementById('imgFallback').style.display='flex';"
         />
+        <div class="img-overlay" aria-hidden="true"><span>clique para ampliar</span></div>
         <div id="imgFallback" class="img-fallback">
           <div>
             <div class="text-4xl mb-3">🖼️</div>
@@ -525,7 +884,7 @@
           <p class="text-xs text-slate-500 leading-relaxed">
             Cadastro válido e atualizado. Dado inconsistente pode derrubar a base de cálculo.
           </p>
-          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para acender azul</p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para destacar</p>
         </div>
 
         <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-aps-blue cursor-pointer select-none" style="border-top-color: var(--aps-blue); background: rgba(239,246,255,.45);">
@@ -534,7 +893,7 @@
           <p class="text-xs text-slate-600 leading-relaxed">
             Acompanhamento territorial com registro tecnicamente válido dentro da janela.
           </p>
-          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para acender azul</p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para destacar</p>
         </div>
 
         <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300 cursor-pointer select-none">
@@ -543,15 +902,13 @@
           <p class="text-xs text-slate-500 leading-relaxed">
             Indicadores e validações que medem resultado e consistência de registro.
           </p>
-          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para acender azul</p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para destacar</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===========================
-       PROVAS SOCIAIS (NOVA SEÇÃO)
-       =========================== -->
+  <!-- PROVAS SOCIAIS -->
   <section id="provas" class="py-16 bg-slate-50 border-y border-slate-200">
     <div class="container-safe">
       <div class="max-w-3xl mx-auto text-center mb-10">
@@ -569,7 +926,6 @@
       </div>
 
       <div class="proofs-track" aria-label="Carrossel de provas sociais (arraste para o lado)">
-        <!-- CARD 01 (ATUAL) -->
         <article class="proof-card">
           <div class="proof-head">
             <span class="proof-tag">WhatsApp</span>
@@ -581,44 +937,85 @@
             role="button"
             tabindex="0"
             aria-label="Ampliar prova social"
-            data-lightbox-src="prova-aps-01.jpg"
+            data-modal-src="prova-aps-01.jpg"
+            data-modal-title="Prova real — WhatsApp"
           >
             <img src="prova-aps-01.jpg" alt="Prova social: mensagem e áudio (WhatsApp)" />
+            <div class="img-overlay" aria-hidden="true"><span>clique para ampliar</span></div>
           </div>
 
-          <div class="proof-foot">
-            <p><b style="color:var(--ink);">Mudança percebida.</b> Quando a lógica encaixa, o medo de erro diminui.</p>
+          <div class="proof-foot" style="padding: 12px 14px 14px;">
+            <p style="margin:0; font-size:12px; color: var(--muted); line-height:1.35;">
+              <b style="color:var(--ink);">Mudança percebida.</b> Quando a lógica encaixa, o medo de erro diminui.
+            </p>
           </div>
         </article>
-
-        <!-- CARD FUTURO (MODELO) — deixei pronto, mas desativado (não aparece) -->
-        <!--
-        <article class="proof-card">
-          <div class="proof-head">
-            <span class="proof-tag">WhatsApp</span>
-            <span class="proof-badge">RESULTADO</span>
-          </div>
-
-          <div
-            class="proof-img"
-            role="button"
-            tabindex="0"
-            aria-label="Ampliar prova social"
-            data-lightbox-src="prova-aps-02.jpg"
-          >
-            <img src="prova-aps-02.jpg" alt="Prova social: depoimento (WhatsApp)" />
-          </div>
-
-          <div class="proof-foot">
-            <p>Texto curto aqui.</p>
-          </div>
-        </article>
-        -->
       </div>
 
       <p class="text-center text-[11px] mt-4 font-semibold text-slate-400">
         Arraste para o lado. (Este bloco aceita várias provas no futuro.)
       </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 bg-white" id="faq">
+    <div class="container-safe max-w-2xl mx-auto">
+      <h2 class="text-center font-black mb-10 uppercase text-xs tracking-[0.3em]" style="color: #94a3b8;">
+        Perguntas comuns
+      </h2>
+
+      <div class="space-y-3">
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Isso é curso?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Não. É um <b>manual em PDF</b>, direto e operacional, para entender regra, janela e validação sem enrolação.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Serve pra ACS e TACS?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Sim. O foco é <b>entender o modelo</b> e reduzir risco de erro de registro/validação.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Isso substitui o sistema ou a coordenação?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Não. O manual te dá <b>clareza da regra</b> para você operar melhor no território e entender o que é invalidado.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Como eu recebo o material?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Você compra no checkout da Hotmart e recebe <b>acesso imediato</b> (download/entrega por e-mail).</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"O que esse manual resolve na prática?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Ele reduz “trabalho no escuro”: você entende <b>janela, vínculo e validação</b> — e para de depender de suposição.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -656,16 +1053,47 @@
           <p class="text-5xl font-black tracking-tighter text-aps-blue">R$ 29,90</p>
         </div>
 
-        <!-- BOTÃO DE COMPRA (Hotmart) - sempre aceso + pulse verde -->
         <a
           id="buyBtn"
           href="https://pay.hotmart.com/C104598275Q?bid=1771875642350"
           target="_blank"
           rel="noopener"
-          class="cta-buy block w-full text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm transition-colors"
+          class="cta-buy cta-main block w-full text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm"
         >
           QUERO DOMINAR A APS 360
         </a>
+
+        <!-- Trust badges (novo) -->
+        <div class="trust" aria-label="Selos de confiança">
+          <div class="trust-item">
+            <div class="trust-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7.5 11V8.5a4.5 4.5 0 0 1 9 0V11" stroke="currentColor" stroke-width="2" />
+                <path d="M6 11h12v10H6V11Z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="trust-txt"><b>Checkout Hotmart seguro</b><br/>Pagamento protegido (SSL).</div>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M13 2 3 14h7l-1 8 12-14h-7l-1-6Z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="trust-txt"><b>Acesso imediato</b><br/>Compra e recebe na hora.</div>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-6Z" stroke="currentColor" stroke-width="2" />
+                <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="trust-txt"><b>PDF operacional</b><br/>Material direto, sem enrolação.</div>
+          </div>
+        </div>
 
         <p class="mt-5 text-[12px] text-slate-500 font-bold bg-slate-50 py-2 rounded-lg border border-slate-100">
           Material em PDF • Atualizável • Versão simplificada para uso operacional
@@ -694,20 +1122,66 @@
     </div>
   </footer>
 
-  <!-- Lightbox (expandir foto) -->
-  <div id="lightbox" class="lightbox" aria-hidden="true">
-    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Imagem ampliada">
-      <button id="lightboxClose" class="lightbox-close" type="button">Fechar ✕</button>
-      <img id="lightboxImg" src="" alt="Imagem ampliada" />
+  <!-- Modal imagens (novo, substitui lightbox antigo mantendo IDs) -->
+  <div id="lightbox" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Imagem ampliada">
+      <div class="modal-top">
+        <div id="modalTitle" class="modal-title">Imagem</div>
+        <button id="lightboxClose" class="modal-close" type="button" aria-label="Fechar">✕ Fechar</button>
+      </div>
+      <div class="modal-body">
+        <img id="lightboxImg" src="" alt="Imagem ampliada" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Exit intent modal -->
+  <div id="exitModal" role="dialog" aria-modal="true" aria-label="Antes de sair">
+    <div class="exit-card">
+      <div class="exit-top">
+        <div class="exit-title">Recuperar visita</div>
+        <button class="exit-x" id="exitClose" type="button" aria-label="Fechar">✕</button>
+      </div>
+      <div class="exit-body">
+        <h3>Espera.</h3>
+        <p>Se você quer parar de trabalhar no escuro, vai na oferta e resolve a regra agora.</p>
+        <div class="exit-actions">
+          <a class="exit-primary" href="#offer">Ir pra oferta</a>
+          <button class="exit-secondary" id="exitDismiss" type="button">Agora não</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
+    // 0) PRELOADER: tempo mínimo + fallback
+    function setupPreloader(){
+      const pre = document.getElementById('preloader');
+      if(!pre) return;
+
+      const minMs = 1150;
+      const hardMax = 4500;
+      const start = Date.now();
+
+      const hide = () => {
+        const elapsed = Date.now() - start;
+        const wait = Math.max(0, minMs - elapsed);
+        setTimeout(() => pre.classList.add('hidden'), wait);
+      };
+
+      window.addEventListener('load', hide);
+
+      setTimeout(() => {
+        if(!pre.classList.contains('hidden')) pre.classList.add('hidden');
+      }, hardMax);
+    }
+
     // 1) Oculta botão flutuante quando a oferta aparece (somente o tradicional)
-    window.addEventListener('load', () => {
+    function setupSmartFloat(){
       const floatCta = document.getElementById('floatCta');
       const offer = document.getElementById('offer');
       if (!floatCta || !offer) return;
+      if (!('IntersectionObserver' in window)) return;
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -717,10 +1191,10 @@
       }, { threshold: 0.1 });
 
       observer.observe(offer);
-    });
+    }
 
-    // 2) Click highlight: pilares (borda acende azul ao tocar)
-    (function(){
+    // 2) Click highlight: pilares
+    function setupPillars(){
       const pillars = Array.from(document.querySelectorAll('[data-pillar]'));
       if(!pillars.length) return;
 
@@ -738,10 +1212,10 @@
         p.setAttribute('role','button');
         p.setAttribute('aria-label','Destacar pilar');
       });
-    })();
+    }
 
-    // 3) Click highlight: comparativo (previne vermelho / aps verde)
-    (function(){
+    // 3) Click highlight: comparativo
+    function setupCompare(){
       const prev = document.getElementById('cardPrevine');
       const aps  = document.getElementById('cardAps');
       if(!prev || !aps) return;
@@ -759,62 +1233,199 @@
 
       prev.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pulse(prev,'glow-red'); }});
       aps.addEventListener('keydown',  (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pulse(aps,'glow-green'); }});
-    })();
+    }
 
-    // 4) Lightbox: clicar imagem do hero para expandir
-    (function(){
-      const frame = document.getElementById('heroFrame');
-      const img   = document.getElementById('heroImg');
-      const lb    = document.getElementById('lightbox');
-      const lbImg = document.getElementById('lightboxImg');
-      const close = document.getElementById('lightboxClose');
-      if(!frame || !img || !lb || !lbImg || !close) return;
+    // 4) Modal imagens (hero + provas) usando data-modal-src
+    function setupImageModal(){
+      const modal = document.getElementById('lightbox');
+      const modalImg = document.getElementById('lightboxImg');
+      const modalTitle = document.getElementById('modalTitle');
+      const closeBtn = document.getElementById('lightboxClose');
 
-      const open = () => {
-        if(img.style.display === 'none') return;
-        lbImg.src = img.currentSrc || img.src;
-        lb.classList.add('is-open');
-        lb.setAttribute('aria-hidden','false');
-        close.focus();
-      };
-      const shut = () => {
-        lb.classList.remove('is-open');
-        lb.setAttribute('aria-hidden','true');
-        lbImg.src = '';
-      };
+      if(!modal || !modalImg || !modalTitle || !closeBtn) return;
 
-      frame.addEventListener('click', open);
-      frame.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); }});
-      close.addEventListener('click', shut);
-      lb.addEventListener('click', (e)=>{ if(e.target === lb) shut(); });
-      window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && lb.classList.contains('is-open')) shut(); });
-    })();
-
-    // 5) Lightbox: prova social (mesmo lightbox já existente)
-    (function(){
-      const lb    = document.getElementById('lightbox');
-      const lbImg = document.getElementById('lightboxImg');
-      const close = document.getElementById('lightboxClose');
-      if(!lb || !lbImg || !close) return;
-
-      const openProof = (src) => {
+      function openModal(src, title){
         if(!src) return;
-        lbImg.src = src;
-        lb.classList.add('is-open');
-        lb.setAttribute('aria-hidden','false');
-        close.focus();
-      };
+        modalImg.src = src;
+        modalTitle.textContent = title || 'Imagem';
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      }
+      function closeModal(){
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden','true');
+        modalImg.src = '';
+        document.body.style.overflow = '';
+      }
 
-      document.querySelectorAll('[data-lightbox-src]').forEach(el => {
-        el.addEventListener('click', () => openProof(el.getAttribute('data-lightbox-src')));
+      document.querySelectorAll('[data-modal-src]').forEach(el => {
+        el.addEventListener('click', () => {
+          const src = el.getAttribute('data-modal-src');
+          const title = el.getAttribute('data-modal-title') || 'Imagem';
+          // evita abrir se a imagem do hero falhou
+          if(el.id === 'heroFrame'){
+            const heroImg = document.getElementById('heroImg');
+            if(heroImg && heroImg.style.display === 'none') return;
+          }
+          openModal(src, title);
+        });
         el.addEventListener('keydown', (e) => {
           if(e.key === 'Enter' || e.key === ' '){
             e.preventDefault();
-            openProof(el.getAttribute('data-lightbox-src'));
+            const src = el.getAttribute('data-modal-src');
+            const title = el.getAttribute('data-modal-title') || 'Imagem';
+            if(el.id === 'heroFrame'){
+              const heroImg = document.getElementById('heroImg');
+              if(heroImg && heroImg.style.display === 'none') return;
+            }
+            openModal(src, title);
           }
         });
       });
-    })();
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+      window.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+      });
+    }
+
+    // 5) FAQ acordeão
+    function setupFaq(){
+      const items = document.querySelectorAll('.faq-item');
+      if(!items.length) return;
+
+      items.forEach(item => {
+        const btn = item.querySelector('.faq-btn');
+        const panel = item.querySelector('.faq-panel');
+        if(!btn || !panel) return;
+
+        btn.addEventListener('click', () => {
+          const isOpen = item.classList.contains('is-open');
+
+          items.forEach(other => {
+            if(other === item) return;
+            other.classList.remove('is-open');
+            const b = other.querySelector('.faq-btn');
+            const p = other.querySelector('.faq-panel');
+            if(b) b.setAttribute('aria-expanded', 'false');
+            if(p){
+              p.style.maxHeight = '0px';
+              p.setAttribute('aria-hidden','true');
+            }
+          });
+
+          if(isOpen){
+            item.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+            panel.style.maxHeight = '0px';
+            panel.setAttribute('aria-hidden','true');
+          } else {
+            item.classList.add('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+            panel.setAttribute('aria-hidden','false');
+          }
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        document.querySelectorAll('.faq-item.is-open .faq-panel').forEach(panel => {
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        });
+      });
+    }
+
+    // 6) Shine nos CTAs principais
+    function setupShine(){
+      const ctas = document.querySelectorAll('.cta-main');
+      if(!ctas.length) return;
+
+      const pulse = () => {
+        ctas.forEach(btn => {
+          btn.classList.remove('shine');
+          void btn.offsetWidth;
+          btn.classList.add('shine');
+        });
+      };
+      pulse();
+      setInterval(pulse, 5200);
+    }
+
+    // 7) EXIT intent por scroll (igual lógica do Kit)
+    function setupExitIntent(){
+      const modal = document.getElementById('exitModal');
+      const close = document.getElementById('exitClose');
+      const dismiss = document.getElementById('exitDismiss');
+      const offerSection = document.getElementById('offer');
+      const buyBtn = document.getElementById('buyBtn');
+      const heroCta = document.getElementById('heroPrimaryCta');
+      const floatBuy = document.getElementById('floatBuy');
+
+      if(!modal || !close || !dismiss || !offerSection) return;
+
+      const key = 'aps360_recover_offer_v1';
+      if(localStorage.getItem(key)) return;
+
+      const open = () => {
+        if(localStorage.getItem(key)) return;
+        modal.classList.add('show');
+        localStorage.setItem(key, '1');
+      };
+      const shut = () => modal.classList.remove('show');
+
+      close.addEventListener('click', shut);
+      dismiss.addEventListener('click', shut);
+      modal.addEventListener('click', (e) => { if(e.target === modal) shut(); });
+
+      const markIntent = () => localStorage.setItem(key, '1');
+      [buyBtn, heroCta, floatBuy].forEach(el => { if(el) el.addEventListener('click', markIntent, { passive: true }); });
+
+      let armed = false;
+      let offerVisible = false;
+      let wasOfferVisible = false;
+      let lastY = window.scrollY;
+
+      if('IntersectionObserver' in window){
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(ent => {
+            if(ent.target !== offerSection) return;
+            offerVisible = ent.isIntersecting;
+            if(offerVisible) armed = true;
+          });
+        }, { threshold: 0.40 });
+        io.observe(offerSection);
+      } else {
+        window.addEventListener('scroll', () => {
+          if(window.scrollY >= offerSection.offsetTop - 120) armed = true;
+        }, { passive: true });
+      }
+
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        const goingUp = y < lastY;
+
+        if(armed && goingUp && wasOfferVisible && !offerVisible){
+          open();
+        }
+        wasOfferVisible = offerVisible;
+        lastY = y;
+      }, { passive: true });
+    }
+
+    setupPreloader();
+
+    window.addEventListener('load', () => {
+      setupSmartFloat();
+      setupPillars();
+      setupCompare();
+      setupImageModal();
+      setupFaq();
+      setupShine();
+      setupExitIntent();
+    });
   </script>
 </body>
 </html>
