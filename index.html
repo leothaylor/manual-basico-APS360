@@ -1,397 +1,1468 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>APS 360 para ACS — Manual Básico Prático</title>
 
-<meta charset="UTF-8" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    :root{
+      --aps-blue:#1e3a8a;
+      --aps-blue-2:#1e40af;
+      --aps-blue-light:#eff6ff;
+      --aps-alert:#dc2626;
+      --aps-success:#16a34a;
 
-<title>APS 360 para ACS — Manual Básico Prático</title>
+      --bg:#f8fafc;
+      --ink:#0f172a;
+      --muted:#475569;
+      --line:#e2e8f0;
+      --card:#ffffff;
 
-<script src="https://cdn.tailwindcss.com"></script>
+      --pre-bg: var(--bg);
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+    html,body{ height:100%; }
+    body{
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x:hidden;
+      scroll-behavior:smooth;
+      -webkit-tap-highlight-color: transparent;
+      padding-bottom: calc(84px + env(safe-area-inset-bottom));
+    }
 
-<style>
+    section[id], header[id], div[id]{ scroll-margin-top: 92px; }
 
-body{
-font-family: 'Inter', sans-serif;
-background:#f8fafc;
-color:#0f172a;
-overflow-x:hidden;
-}
+    .container-safe{
+      width:100%;
+      max-width:1100px;
+      padding:0 1.25rem;
+      margin:0 auto;
+    }
 
-</style>
+    .text-aps-blue{ color:var(--aps-blue); }
+    .bg-aps-blue{ background-color:var(--aps-blue); }
+    .border-aps-blue{ border-color:var(--aps-blue); }
+    .text-aps-alert{ color:var(--aps-alert); }
+    .text-aps-success{ color:var(--aps-success); }
 
+    .hero-wrap{
+      background:
+        radial-gradient(1000px 500px at 20% 0%, rgba(30,58,138,.10), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(37,99,235,.10), transparent 55%),
+        linear-gradient(#ffffff, #ffffff);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.4rem .75rem;
+      border-radius:999px;
+      font-weight:900;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      background: rgba(239,246,255,.9);
+      border: 1px solid rgba(191,219,254,.9);
+      color: var(--aps-blue);
+    }
+
+    .hero-title{ letter-spacing:-0.03em; }
+
+    .soft-card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 45px -35px rgba(2,6,23,.35);
+    }
+
+    .info-card{
+      background: rgba(239,246,255,.9);
+      border: 1px solid rgba(191,219,254,.9);
+      border-radius: 18px;
+    }
+
+    .img-frame{
+      border-radius: 18px;
+      overflow:hidden;
+      position:relative;
+      background:#f1f5f9;
+      border:1px solid #e2e8f0;
+      box-shadow: 0 24px 60px -45px rgba(2,6,23,.55);
+      cursor: zoom-in;
+      user-select:none;
+    }
+    .img-frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .img-fallback{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      color:#64748b;
+      border:2px dashed #cbd5e1;
+      border-radius:18px;
+      margin:12px;
+      text-align:center;
+      padding:24px;
+      background: rgba(248,250,252,.88);
+      cursor: default;
+    }
+
+    .img-overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      padding: 10px;
+      pointer-events:none;
+    }
+    .img-overlay span{
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      background: rgba(15,23,42,.72);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+    }
+
+    .float-btn{
+      position:fixed;
+      right:16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index:999;
+      background-color: var(--aps-blue);
+      color:#fff;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: .85rem;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      transition: transform .15s ease, background-color .15s ease, opacity .15s ease;
+      box-shadow: 0 14px 30px -14px rgba(30,58,138,.55);
+    }
+    .float-btn:hover{ transform: scale(1.03); background-color: var(--aps-blue-2); }
+    .float-btn.is-hidden{ opacity:0; pointer-events:none; }
+
+    .float-buy{
+      position:fixed;
+      left: 16px;
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      z-index: 1000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 16px 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: .95rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color:#fff;
+      background: var(--aps-success);
+      box-shadow: 0 18px 40px -18px rgba(22,163,74,.65);
+      transition: transform .15s ease, background-color .15s ease;
+      outline: none;
+      border: none;
+      -webkit-user-select:none;
+      user-select:none;
+    }
+    .float-buy:hover{ transform: scale(1.01); background:#15803d; }
+
+    @media (max-width: 767px){
+      .float-buy{ display:flex; }
+      #floatCta{ display:none !important; }
+    }
+
+    .cta-main{
+      position: relative;
+      overflow: hidden;
+      transform: translateZ(0);
+      transition: transform .25s ease, background-color .25s ease, outline-color .25s ease;
+      outline: 2px solid rgba(30,58,138,.22);
+      outline-offset: 0px;
+      -webkit-user-select:none;
+      user-select:none;
+    }
+    .cta-main::after{
+      content:"";
+      position:absolute;
+      top:-40%;
+      left:-60%;
+      width: 40%;
+      height: 180%;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.55), rgba(255,255,255,0));
+      transform: skewX(-18deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .cta-main.shine::after{ animation: shine 1.05s ease-in-out; }
+    @keyframes shine{
+      0%{ left:-60%; opacity: 0; }
+      15%{ opacity: .9; }
+      100%{ left: 120%; opacity: 0; }
+    }
+    .cta-main:hover{ transform: scale(1.02); }
+    .cta-main:active{ transform: scale(0.98); }
+
+    .cta-buy{
+      background: var(--aps-success);
+      box-shadow: 0 18px 40px -18px rgba(22,163,74,.65);
+      border: 1px solid rgba(2,6,23,.10);
+      opacity: 1 !important;
+      filter: none !important;
+      transition: transform .20s ease, background-color .20s ease, box-shadow .20s ease;
+    }
+    .cta-buy:hover{ background:#15803d; transform: scale(1.01); }
+    .cta-buy:active{ transform: scale(0.98); }
+
+    .glow-blue{
+      border-color: rgba(37,99,235,.95) !important;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.16), 0 18px 45px -35px rgba(2,6,23,.35);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .glow-red{
+      border-color: rgba(220,38,38,.95) !important;
+      box-shadow: 0 0 0 4px rgba(220,38,38,.12);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .glow-green{
+      border-color: rgba(22,163,74,.95) !important;
+      box-shadow: 0 0 0 4px rgba(22,163,74,.14);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .card-red{ border-top: 4px solid var(--aps-alert); background:#fff; }
+    .card-green{ border-top: 4px solid var(--aps-success); background:#fff; }
+
+    .proofs-track{
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: min(320px, 80vw);
+      gap: 14px;
+      overflow-x: auto;
+      padding: 6px 4px 14px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .proofs-track::-webkit-scrollbar{ height: 8px; }
+    .proofs-track::-webkit-scrollbar-track{ background: rgba(2,6,23,.04); border-radius: 999px; }
+    .proofs-track::-webkit-scrollbar-thumb{ background: rgba(30,58,138,.50); border-radius: 999px; }
+
+    .proof-card{
+      scroll-snap-align: start;
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 18px 45px -35px rgba(2,6,23,.35);
+    }
+    .proof-head{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255,255,255,.94);
+    }
+    .proof-tag{
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .proof-badge{
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--aps-blue);
+      background: rgba(239,246,255,.95);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(191,219,254,.9);
+      white-space: nowrap;
+    }
+    .proof-img{
+      width: 100%;
+      height: 420px;
+      background: #f1f5f9;
+      cursor: zoom-in;
+      user-select:none;
+      position: relative;
+    }
+    .proof-img img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.70);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 18px;
+    }
+    .modal-backdrop.is-open{ display: flex; }
+
+    .modal-card{
+      width: min(980px, 96vw);
+      max-height: 90vh;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .modal-top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      gap: 10px;
+    }
+    .modal-title{
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 75%;
+    }
+    .modal-close{
+      background: rgba(2,6,23,.06);
+      border: 1px solid rgba(2,6,23,.08);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 900;
+      font-size: 12px;
+      color: var(--ink);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .modal-close:hover{ background: rgba(2,6,23,.10); }
+    .modal-body{
+      padding: 10px;
+      overflow: auto;
+      background: #0b1220;
+    }
+    .modal-body img{
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .faq-item{ border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+    .faq-btn{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: left;
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--ink);
+      padding: 12px 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .faq-icon{
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(255,255,255,.80);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      transition: transform .25s ease;
+      font-weight: 900;
+      color: var(--muted);
+    }
+    .faq-item.is-open .faq-icon{ transform: rotate(45deg); }
+    .faq-panel{ max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .faq-panel p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      padding-bottom: 10px;
+    }
+
+    .trust{ margin-top: 14px; display: grid; gap: 8px; text-align: left; }
+    .trust-item{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(2,6,23,.08);
+      background: rgba(255,255,255,.90);
+    }
+    .trust-ico{
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(30,58,138,.30);
+      background: rgba(239,246,255,.75);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--aps-blue);
+    }
+    .trust-txt{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+    .trust-txt b{ color: var(--ink); }
+
+    .nav-logo{
+      height: 46px;
+      width: 100%;
+      object-fit: contain;
+      object-position: left center;
+      display: block;
+    }
+    @media (min-width: 768px){
+      .nav-logo{ height: 54px; }
+    }
+
+    #preloader{
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      background: var(--pre-bg);
+      transition: opacity .45s ease, visibility .45s ease;
+    }
+    #preloader.hidden{
+      opacity: 0;
+      visibility: hidden;
+    }
+    .spinner{
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: grid;
+      place-items: center;
+    }
+    .spinner-svg{ width: 120px; height: 120px; }
+    .spinner-track{
+      fill: none;
+      stroke: rgba(30,58,138,.10);
+      stroke-width: 6;
+    }
+    .spinner-arc{
+      fill: none;
+      stroke: rgba(30,58,138,.85);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 78 260;
+      stroke-dashoffset: 0;
+      transform-origin: 60px 60px;
+      animation: spinArc 1.05s ease-in-out infinite;
+    }
+    @keyframes spinArc{
+      0%   { transform: rotate(0deg);   stroke-dasharray: 40 260;  opacity: .95; }
+      50%  { transform: rotate(180deg); stroke-dasharray: 95 260;  opacity: 1; }
+      100% { transform: rotate(360deg); stroke-dasharray: 40 260;  opacity: .95; }
+    }
+    .spinner-ring{
+      opacity: 0;
+      transform-origin: 60px 60px;
+      transform: scale(.96);
+      animation: ringIn .55s ease forwards;
+      animation-delay: .75s;
+    }
+    @keyframes ringIn{ to{ opacity: 1; transform: scale(1); } }
+    .ring-outer{ fill: none; stroke: rgba(30,58,138,.32); stroke-width: 2.5; }
+    .ring-inner{ fill: none; stroke: rgba(30,58,138,.16); stroke-width: 2; }
+    .spinner-logo{
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: scale(.92);
+      animation: logoIn .55s ease forwards;
+      animation-delay: .85s;
+    }
+    .spinner-logo img{
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      display: block;
+      background: transparent;
+    }
+    @keyframes logoIn{ to{ opacity: 1; transform: scale(1); } }
+    .spinner-pulse{
+      position: absolute;
+      inset: -8px;
+      border-radius: 999px;
+      border: 1px solid rgba(30,58,138,.10);
+      opacity: 0;
+      pointer-events: none;
+      animation: pulseRing 1.25s ease-out infinite;
+      animation-delay: 1.05s;
+    }
+    @keyframes pulseRing{
+      0%{ opacity: 0; transform: scale(.92); }
+      35%{ opacity: .55; }
+      100%{ opacity: 0; transform: scale(1.08); }
+    }
+
+    #exitModal{
+      position: fixed;
+      inset: 0;
+      z-index: 2100;
+      background: rgba(2,6,23,.70);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    #exitModal.show{ display: flex; }
+    .exit-card{
+      width: min(520px, 96vw);
+      border-radius: 24px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(255,255,255,.18);
+      overflow: hidden;
+    }
+    .exit-top{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(2,6,23,.08);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .exit-title{
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .exit-x{
+      border-radius: 999px;
+      padding: 10px 12px;
+      border: 1px solid rgba(2,6,23,.10);
+      background: rgba(2,6,23,.05);
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .exit-body{ padding: 16px; text-align: left; }
+    .exit-body h3{
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--ink);
+      margin: 0 0 8px 0;
+    }
+    .exit-body p{
+      margin: 0 0 14px 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .exit-actions{ display:grid; gap: 10px; }
+    .exit-primary{
+      display:block;
+      width: 100%;
+      text-align:center;
+      background: var(--aps-blue);
+      color: #fff;
+      font-weight: 900;
+      border-radius: 18px;
+      padding: 14px 16px;
+      border: 1px solid rgba(2,6,23,.08);
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      transition: transform .25s ease, background-color .25s ease;
+    }
+    .exit-primary:hover{ background: var(--aps-blue-2); transform: scale(1.02); }
+    .exit-secondary{
+      display:block;
+      width: 100%;
+      text-align:center;
+      background: rgba(239,246,255,.80);
+      color: var(--ink);
+      font-weight: 900;
+      border-radius: 18px;
+      padding: 14px 16px;
+      border: 1px solid rgba(191,219,254,.9);
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
 </head>
 
-
 <body id="top">
-
-
-<script>
-
-const HOTMART_CHECKOUT_BASE = "https://pay.hotmart.com/C104598275Q"
-
-</script>
-
-
-
-<!-- BOTÃO FLUTUANTE -->
-
-<a
-
-id="floatCta"
-
-href="#offer"
-
-class="fixed right-4 bottom-4 bg-blue-900 text-white px-5 py-3 rounded-full font-black text-sm"
-
->
-
-GARANTIR MEU MANUAL
-
-</a>
-
-
-
-<!-- BOTÃO MOBILE -->
-
-<a
-
-id="floatBuy"
-
-href="https://pay.hotmart.com/C104598275Q"
-
-data-checkout
-
-data-cta-content="cta_float"
-
-class="fixed left-4 right-4 bottom-4 bg-green-600 text-white text-center font-black py-4 rounded-full uppercase"
-
->
-
-GARANTA JÁ • R$ 29,90
-
-</a>
-
-
-
-
-<!-- HERO -->
-
-<header class="py-16 text-center">
-
-<h1 class="text-4xl font-black mb-6">
-
-Entenda o que mudou do Previne Brasil para APS 360
-
-</h1>
-
-
-<p class="max-w-xl mx-auto mb-8 text-gray-600">
-
-Manual prático para ACS entender cálculo, vínculo, janela móvel e validação da nova APS.
-
-</p>
-
-
-<a
-
-href="https://pay.hotmart.com/C104598275Q"
-
-data-checkout
-
-data-cta-content="cta_hero"
-
-class="bg-blue-900 text-white font-black px-10 py-4 rounded-xl"
-
->
-
-DOMINAR O NOVO MODELO
-
-</a>
-
-</header>
-
-
-
-<!-- SEÇÃO COMPARAÇÃO -->
-
-<section class="py-20 bg-gray-100 text-center">
-
-<h2 class="text-3xl font-black mb-12">
-
-A Mudança de Jogo
-
-</h2>
-
-
-<div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-
-
-<div class="bg-white p-8 rounded-xl border">
-
-<h3 class="font-black mb-4 text-red-600">
-
-Modelo Previne Brasil
-
-</h3>
-
-<ul class="space-y-3 text-sm">
-
-<li>Foco em volume de cadastro</li>
-
-<li>Monitoramento limitado</li>
-
-<li>Registro inconsistente tolerado</li>
-
-</ul>
-
-</div>
-
-
-<div class="bg-white p-8 rounded-xl border">
-
-<h3 class="font-black mb-4 text-green-600">
-
-Nova APS 360
-
-</h3>
-
-<ul class="space-y-3 text-sm">
-
-<li>Acompanhamento real</li>
-
-<li>Validação automática</li>
-
-<li>Registro inconsistente pode ser invalidado</li>
-
-</ul>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-
-<!-- OFERTA -->
-
-<section id="offer" class="py-24 text-center bg-slate-900">
-
-<div class="bg-white p-10 rounded-3xl max-w-lg mx-auto">
-
-<h2 class="text-3xl font-black mb-4">
-
-Pare de trabalhar no escuro
-
-</h2>
-
-
-<p class="text-gray-600 mb-6">
-
-Manual direto para entender regra, janela e validação.
-
-</p>
-
-
-<p class="line-through text-gray-400">
-
-R$39,90
-
-</p>
-
-
-<p class="text-5xl font-black text-blue-900 mb-8">
-
-R$29,90
-
-</p>
-
-
-
-<a
-
-id="buyBtn"
-
-href="https://pay.hotmart.com/C104598275Q"
-
-data-checkout
-
-data-cta-content="cta_offer"
-
-class="block bg-green-600 text-white font-black py-5 rounded-2xl"
-
->
-
-QUERO DOMINAR A APS 360
-
-</a>
-
-
-</div>
-
-</section>
-
-
-
-<footer class="py-10 text-center text-sm text-gray-500">
-
-Gestão Estratégica de Dados no Território
-
-</footer>
-
-
-
-<script>
-
-/* =============================
-
-SISTEMA DE RASTREAMENTO DE UTMS
-
-============================= */
-
-
-(function(){
-
-
-const allowedParams = [
-
-"utm_source",
-
-"utm_medium",
-
-"utm_campaign",
-
-"utm_content",
-
-"utm_term",
-
-"utm_id",
-
-"gclid",
-
-"ttclid",
-
-"ref"
-
-]
-
-
-const fallback = {
-
-utm_source:"landingpage",
-
-utm_medium:"site",
-
-utm_campaign:"aps360"
-
-}
-
-
-function getCleanParams(){
-
-
-const params = new URLSearchParams(window.location.search)
-
-const result = {}
-
-
-params.forEach((value,key)=>{
-
-
-if(key === "fbclid") return
-
-
-if(allowedParams.includes(key)){
-
-result[key] = value
-
-}
-
-
-})
-
-
-Object.keys(fallback).forEach(key=>{
-
-
-if(!result[key]){
-
-result[key] = fallback[key]
-
-}
-
-
-})
-
-
-return result
-
-
-}
-
-
-
-function buildCheckout(base,content){
-
-
-const params = getCleanParams()
-
-
-if(content){
-
-params.utm_content = content
-
-}
-
-
-const query = new URLSearchParams(params).toString()
-
-
-return base + "?" + query
-
-
-}
-
-
-
-function applyCheckout(){
-
-
-const buttons = document.querySelectorAll("[data-checkout]")
-
-
-buttons.forEach(btn=>{
-
-
-const content = btn.dataset.ctaContent || null
-
-
-const finalLink = buildCheckout(HOTMART_CHECKOUT_BASE,content)
-
-
-btn.href = finalLink
-
-
-})
-
-
-}
-
-
-applyCheckout()
-
-
-})()
-
-</script>
-
-
+  <script>
+    const HOTMART_BASE_LINK = "https://pay.hotmart.com/C104598275Q";
+    const INSTAGRAM_LINK = "https://www.instagram.com/acs5374/";
+  </script>
+
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <div class="spinner" role="status" aria-label="Carregando">
+      <svg class="spinner-svg" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="spinner-track" cx="60" cy="60" r="42"></circle>
+        <circle class="spinner-arc" cx="60" cy="60" r="42"></circle>
+        <g class="spinner-ring">
+          <circle class="ring-outer" cx="60" cy="60" r="44"></circle>
+          <circle class="ring-inner" cx="60" cy="60" r="36"></circle>
+        </g>
+      </svg>
+      <div class="spinner-logo" aria-hidden="true">
+        <img src="logo.png" alt="" />
+      </div>
+      <div class="spinner-pulse" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- Botão flutuante (tradicional) -->
+  <a id="floatCta" href="#offer" class="float-btn cta-main" aria-label="Ir para oferta">
+    <span aria-hidden="true">📘</span> GARANTIR MEU MANUAL
+  </a>
+
+  <!-- NOVO botão flutuante (mobile) — compra direta com valor -->
+  <a
+    id="floatBuy"
+    data-checkout="aps360"
+    data-cta-content="cta_float_mobile"
+    href="https://pay.hotmart.com/C104598275Q"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="float-buy"
+    aria-label="Comprar agora por R$ 29,90 e ir direto ao carrinho"
+  >
+    <span aria-hidden="true">🛒</span> GARANTA JÁ • R$ 29,90
+  </a>
+
+  <!-- Navbar -->
+  <nav class="bg-white/90 backdrop-blur-md border-b sticky top-0 z-50" style="border-color: var(--line);">
+    <div class="container-safe py-3 flex items-center justify-between gap-4">
+      <a href="#top" class="flex-1 min-w-0" aria-label="Voltar ao topo">
+        <img src="logo.png" alt="Logo APS 360" class="nav-logo" />
+      </a>
+
+      <a href="#offer" class="text-xs font-black bg-aps-blue text-white px-5 py-2.5 rounded-full uppercase tracking-widest transition hover:opacity-90 whitespace-nowrap cta-main">
+        Acessar Manual
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero-wrap py-14 md:py-20" id="hero">
+    <div class="container-safe grid md:grid-cols-2 gap-12 items-center">
+      <div class="text-center md:text-left">
+        <span class="pill mb-5">
+          <span aria-hidden="true">📌</span> GUIA TÉCNICO OPERACIONAL
+        </span>
+
+        <h1 class="hero-title text-4xl md:text-5xl font-black leading-[1.06] mb-5">
+          Entenda o que mudou do Previne Brasil para a
+          <span class="text-aps-blue underline italic">APS 360</span>.
+        </h1>
+
+        <p class="mb-6 text-[15px] md:text-[16px] font-medium leading-relaxed" style="color:var(--muted);">
+          Manual prático e direto para ACS/TACS entenderem cálculo, vínculo, janela móvel e o que realmente pode zerar pontuação.
+        </p>
+
+        <div class="soft-card p-5 md:p-6 mb-6 text-left" style="background: rgba(255,255,255,.92);">
+          <p class="text-[11px] font-black uppercase tracking-widest mb-3" style="color: var(--muted);">
+            O que você recebe (PDF)
+          </p>
+          <ul class="text-sm font-semibold text-slate-700 space-y-2">
+            <li class="flex items-start gap-2"><span aria-hidden="true">✅</span><span>Explicação do modelo fracionado e onde a pontuação cai.</span></li>
+            <li class="flex items-start gap-2"><span aria-hidden="true">✅</span><span>Janela móvel e validações: o que entra e o que é invalidado.</span></li>
+            <li class="flex items-start gap-2"><span aria-hidden="true">✅</span><span>Leitura operacional: vínculo, prazos e risco de “trabalhar no escuro”.</span></li>
+          </ul>
+          <p class="mt-3 text-xs" style="color: var(--muted);">
+            Sem hype. É regra aplicada no território.
+          </p>
+        </div>
+
+        <div class="info-card p-5 md:p-6 mb-6">
+          <div class="flex items-start gap-3">
+            <span class="text-aps-blue font-black mt-0.5 text-lg">ℹ️</span>
+            <div class="text-left">
+              <p class="text-sm font-black text-slate-900">Informação Importante:</p>
+              <p class="text-sm mt-1 text-slate-700">
+                Entender prazos de envio e validações do sistema é o que garante a contabilização do seu trabalho.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="soft-card p-5 md:p-6 mb-8 text-left">
+          <ul class="text-sm font-semibold text-slate-700 space-y-3">
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Modelo fracionado por pontos
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Janela móvel retroativa
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Validação matemática automática
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-sm bg-blue-700 inline-block"></span>
+              Intervalo mínimo entre visitas
+            </li>
+          </ul>
+
+          <div class="mt-6 flex flex-col sm:flex-row gap-4">
+            <a href="#offer" class="bg-aps-blue text-white font-black px-8 py-4 rounded-xl text-center shadow-lg shadow-blue-900/20 cta-main" id="heroPrimaryCta">
+              DOMINAR O NOVO MODELO
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="img-frame h-72 md:h-[500px]" id="heroFrame" role="button" tabindex="0" aria-label="Ampliar imagem"
+           data-modal-src="capa-aps360.jpg" data-modal-title="Capa do Manual APS 360">
+        <img
+          id="heroImg"
+          src="capa-aps360.jpg"
+          alt="Capa do Manual APS 360"
+          loading="eager"
+          onerror="this.style.display='none'; document.getElementById('imgFallback').style.display='flex';"
+        />
+        <div class="img-overlay" aria-hidden="true"><span>clique para ampliar</span></div>
+        <div id="imgFallback" class="img-fallback">
+          <div>
+            <div class="text-4xl mb-3">🖼️</div>
+            <p class="font-black text-aps-blue">Imagem ainda não adicionada</p>
+            <p class="text-xs mt-2" style="color: var(--muted);">
+              Envie sua capa como <b>capa-aps360.jpg</b> (ao lado do index)
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Comparativo -->
+  <section class="py-16 bg-slate-50 border-y border-slate-200">
+    <div class="container-safe">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-black mb-3 uppercase tracking-tighter text-aps-blue">
+          Análise de Cenário: A Mudança de Jogo
+        </h2>
+        <p class="text-sm" style="color: var(--muted);">
+          O que funcionava ontem, hoje pode virar perda de repasse. Entenda a nova matriz.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div id="cardPrevine" class="card-red p-8 rounded-2xl shadow-sm border border-slate-200 relative cursor-pointer select-none">
+          <div class="absolute -top-4 left-6 bg-red-100 text-aps-alert text-xs font-black uppercase px-3 py-1 rounded-full border border-red-200">
+            Passado
+          </div>
+          <h3 class="text-xl font-black mt-2 mb-4 text-slate-800">Modelo Previne Brasil 🔴</h3>
+          <ul class="space-y-4 text-sm text-slate-600">
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">⨯</span> Foco em volume bruto de cadastros.</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">⨯</span> Monitoramento mais raso e menos cruzamento de dados.</li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">⨯</span> Registro sem padrão técnico era “tolerado” na prática.</li>
+          </ul>
+          <p class="mt-5 text-xs text-slate-400 font-semibold">Toque para destacar (borda vermelha).</p>
+        </div>
+
+        <div id="cardAps" class="card-green p-8 rounded-2xl shadow-lg border border-slate-200 relative bg-white cursor-pointer select-none">
+          <div class="absolute -top-4 left-6 bg-green-100 text-aps-success text-xs font-black uppercase px-3 py-1 rounded-full border border-green-200">
+            Presente / Futuro
+          </div>
+          <h3 class="text-xl font-black mt-2 mb-4 text-slate-800">Nova APS 360 🟢</h3>
+          <ul class="space-y-4 text-sm text-slate-700 font-medium">
+            <li class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span> Repasse baseado em acompanhamento real e contínuo.</li>
+            <li class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span> Mais rigor técnico: janela, validade, vínculo e produção.</li>
+            <li class="flex items-start gap-2"><span class="text-green-600 font-bold mt-0.5">✓</span> Registro inconsistente pode ser invalidado no processamento.</li>
+          </ul>
+          <p class="mt-5 text-xs text-slate-400 font-semibold">Toque para destacar (borda verde).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 pilares -->
+  <section class="py-16 bg-white">
+    <div class="container-safe">
+      <h2 class="text-2xl font-black text-center mb-10 text-aps-blue uppercase tracking-widest">
+        A Arquitetura do Repasse: Os 3 Pilares
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300 cursor-pointer select-none">
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-slate-200">🪪</div>
+          <h3 class="font-black text-slate-800 mb-2">1. Capitação</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            Cadastro válido e atualizado. Dado inconsistente pode derrubar a base de cálculo.
+          </p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para destacar</p>
+        </div>
+
+        <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-aps-blue cursor-pointer select-none" style="border-top-color: var(--aps-blue); background: rgba(239,246,255,.45);">
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl border border-blue-100">📍</div>
+          <h3 class="font-black text-slate-800 mb-2">2. Vínculo</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Acompanhamento territorial com registro tecnicamente válido dentro da janela.
+          </p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para destacar</p>
+        </div>
+
+        <div data-pillar class="pillar soft-card p-6 text-center hover:-translate-y-1 transition-transform border-t-4 border-slate-300 cursor-pointer select-none">
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-content:center mx-auto mb-4 text-xl border border-slate-200">📈</div>
+          <h3 class="font-black text-slate-800 mb-2">3. Qualidade</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            Indicadores e validações que medem resultado e consistência de registro.
+          </p>
+          <p class="mt-4 text-[11px] text-slate-400 font-bold uppercase tracking-widest">Toque para destacar</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROVAS SOCIAIS -->
+  <section id="provas" class="py-16 bg-slate-50 border-y border-slate-200">
+    <div class="container-safe">
+      <div class="max-w-3xl mx-auto text-center mb-10">
+        <span class="pill mb-4">
+          <span aria-hidden="true">✅</span> PROVA REAL
+        </span>
+
+        <h2 class="text-2xl md:text-3xl font-black mb-3 uppercase tracking-tighter text-aps-blue">
+          Quem já ouviu, entendeu.
+        </h2>
+
+        <p class="text-sm" style="color: var(--muted);">
+          Sem promessa. Sem hype. Só a confirmação de quem já viu a regra e percebeu o impacto.
+        </p>
+      </div>
+
+      <div class="proofs-track" aria-label="Carrossel de provas sociais (arraste para o lado)">
+        <article class="proof-card">
+          <div class="proof-head">
+            <span class="proof-tag">WhatsApp</span>
+            <span class="proof-badge">ÁUDIO</span>
+          </div>
+
+          <div
+            class="proof-img"
+            role="button"
+            tabindex="0"
+            aria-label="Ampliar prova social"
+            data-modal-src="prova-aps-01.jpg"
+            data-modal-title="Prova real — WhatsApp"
+          >
+            <img src="prova-aps-01.jpg" alt="Prova social: mensagem e áudio (WhatsApp)" />
+            <div class="img-overlay" aria-hidden="true"><span>clique para ampliar</span></div>
+          </div>
+
+          <div class="proof-foot" style="padding: 12px 14px 14px;">
+            <p style="margin:0; font-size:12px; color: var(--muted); line-height:1.35;">
+              <b style="color:var(--ink);">Mudança percebida.</b> Quando a lógica encaixa, o medo de erro diminui.
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <p class="text-center text-[11px] mt-4 font-semibold text-slate-400">
+        Arraste para o lado. (Este bloco aceita várias provas no futuro.)
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 bg-white" id="faq">
+    <div class="container-safe max-w-2xl mx-auto">
+      <h2 class="text-center font-black mb-10 uppercase text-xs tracking-[0.3em]" style="color: #94a3b8;">
+        Perguntas comuns
+      </h2>
+
+      <div class="space-y-3">
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Isso é curso?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Não. É um <b>manual em PDF</b>, direto e operacional, para entender regra, janela e validação sem enrolação.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Serve pra ACS e TACS?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Sim. O foco é <b>entender o modelo</b> e reduzir risco de erro de registro/validação.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Isso substitui o sistema ou a coordenação?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Não. O manual te dá <b>clareza da regra</b> para você operar melhor no território e entender o que é invalidado.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"Como eu recebo o material?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Você compra no checkout da Hotmart e recebe <b>acesso imediato</b> (download/entrega por e-mail).</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" type="button" aria-expanded="false">
+            <span>"O que esse manual resolve na prática?"</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-panel" aria-hidden="true">
+            <p>Ele reduz “trabalho no escuro”: você entende <b>janela, vínculo e validação</b> — e para de depender de suposição.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Oferta -->
+  <section id="offer" class="py-24 text-center bg-slate-900 relative border-t-8" style="border-top-color: var(--aps-blue);">
+    <div class="container-safe">
+      <div class="bg-white p-10 md:p-14 rounded-[2.5rem] border border-slate-200 max-w-xl mx-auto overflow-hidden relative shadow-2xl">
+        <div class="absolute top-0 right-0 bg-aps-blue text-white px-6 py-2 font-black text-[10px] rounded-bl-2xl uppercase tracking-widest">
+          Download Imediato
+        </div>
+
+        <h2 class="text-3xl font-black mb-4 tracking-tighter" style="color: var(--ink);">
+          Pare de trabalhar no escuro.
+        </h2>
+
+        <p class="text-sm mb-6 font-medium text-slate-600">
+          Um manual direto para entender regra, janela e validação — e reduzir risco de perda por erro de registro.
+        </p>
+
+        <div class="mb-6 pt-4 border-t border-slate-100 text-left">
+          <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3 text-center">
+            Material Estruturado Para:
+          </p>
+          <div class="grid grid-cols-2 gap-3 max-w-[220px] mx-auto text-sm font-bold text-slate-700">
+            <div class="flex items-center gap-2 justify-center"><span class="text-aps-success">✔</span> ACS</div>
+            <div class="flex items-center gap-2 justify-center"><span class="text-aps-success">✔</span> TACS</div>
+          </div>
+        </div>
+
+        <div class="mb-8 mt-8">
+          <p class="text-aps-alert font-black text-xs uppercase tracking-widest mb-3">
+            Preço Especial de Lançamento
+          </p>
+          <p class="line-through font-bold text-slate-400 text-sm">R$ 39,90</p>
+          <p class="text-5xl font-black tracking-tighter text-aps-blue">R$ 29,90</p>
+        </div>
+
+        <a
+          id="buyBtn"
+          data-checkout="aps360"
+          data-cta-content="cta_offer"
+          href="https://pay.hotmart.com/C104598275Q"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cta-buy cta-main block w-full text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm"
+        >
+          QUERO DOMINAR A APS 360
+        </a>
+
+        <div class="trust" aria-label="Selos de confiança">
+          <div class="trust-item">
+            <div class="trust-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7.5 11V8.5a4.5 4.5 0 0 1 9 0V11" stroke="currentColor" stroke-width="2" />
+                <path d="M6 11h12v10H6V11Z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="trust-txt"><b>Checkout Hotmart seguro</b><br/>Pagamento protegido (SSL).</div>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M13 2 3 14h7l-1 8 12-14h-7l-1-6Z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="trust-txt"><b>Acesso imediato</b><br/>Compra e recebe na hora.</div>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-6Z" stroke="currentColor" stroke-width="2" />
+                <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="trust-txt"><b>PDF operacional</b><br/>Material direto, sem enrolação.</div>
+          </div>
+        </div>
+
+        <p class="mt-5 text-[12px] text-slate-500 font-bold bg-slate-50 py-2 rounded-lg border border-slate-100">
+          Material em PDF • Atualizável • Versão simplificada para uso operacional
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 border-t border-slate-800 py-10 text-center">
+    <div class="container-safe">
+      <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase">
+        Gestão Estratégica de Dados no Território © 2024/2026
+      </p>
+
+      <div class="mt-4">
+        <a
+          href="https://www.instagram.com/acs5374/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-blue-200 hover:text-white transition"
+        >
+          <span aria-hidden="true">📲</span> Instagram de vendas: @acs5374
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal imagens -->
+  <div id="lightbox" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Imagem ampliada">
+      <div class="modal-top">
+        <div id="modalTitle" class="modal-title">Imagem</div>
+        <button id="lightboxClose" class="modal-close" type="button" aria-label="Fechar">✕ Fechar</button>
+      </div>
+      <div class="modal-body">
+        <img id="lightboxImg" src="" alt="Imagem ampliada" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Exit intent modal -->
+  <div id="exitModal" role="dialog" aria-modal="true" aria-label="Antes de sair">
+    <div class="exit-card">
+      <div class="exit-top">
+        <div class="exit-title">Recuperar visita</div>
+        <button class="exit-x" id="exitClose" type="button" aria-label="Fechar">✕</button>
+      </div>
+      <div class="exit-body">
+        <h3>Espera.</h3>
+        <p>Se você quer parar de trabalhar no escuro, vai na oferta e resolve a regra agora.</p>
+        <div class="exit-actions">
+          <a class="exit-primary" href="#offer">Ir pra oferta</a>
+          <button class="exit-secondary" id="exitDismiss" type="button">Agora não</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setupPreloader(){
+      const pre = document.getElementById('preloader');
+      if(!pre) return;
+
+      const minMs = 1150;
+      const hardMax = 4500;
+      const start = Date.now();
+
+      const hide = () => {
+        const elapsed = Date.now() - start;
+        const wait = Math.max(0, minMs - elapsed);
+        setTimeout(() => pre.classList.add('hidden'), wait);
+      };
+
+      window.addEventListener('load', hide);
+
+      setTimeout(() => {
+        if(!pre.classList.contains('hidden')) pre.classList.add('hidden');
+      }, hardMax);
+    }
+
+    function setupSmartFloat(){
+      const floatCta = document.getElementById('floatCta');
+      const offer = document.getElementById('offer');
+      if (!floatCta || !offer) return;
+      if (!('IntersectionObserver' in window)) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) floatCta.classList.add('is-hidden');
+          else floatCta.classList.remove('is-hidden');
+        });
+      }, { threshold: 0.1 });
+
+      observer.observe(offer);
+    }
+
+    function setupPillars(){
+      const pillars = Array.from(document.querySelectorAll('[data-pillar]'));
+      if(!pillars.length) return;
+
+      const flash = (el, cls='glow-blue') => {
+        el.classList.add(cls);
+        window.setTimeout(()=> el.classList.remove(cls), 550);
+      };
+
+      pillars.forEach(p => {
+        p.addEventListener('click', () => flash(p, 'glow-blue'));
+        p.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flash(p, 'glow-blue'); }
+        });
+        p.setAttribute('tabindex','0');
+        p.setAttribute('role','button');
+        p.setAttribute('aria-label','Destacar pilar');
+      });
+    }
+
+    function setupCompare(){
+      const prev = document.getElementById('cardPrevine');
+      const aps  = document.getElementById('cardAps');
+      if(!prev || !aps) return;
+
+      const pulse = (el, cls) => {
+        el.classList.add(cls);
+        window.setTimeout(()=> el.classList.remove(cls), 650);
+      };
+
+      prev.addEventListener('click', ()=> pulse(prev, 'glow-red'));
+      aps.addEventListener('click',  ()=> pulse(aps, 'glow-green'));
+
+      prev.setAttribute('tabindex','0'); prev.setAttribute('role','button');
+      aps.setAttribute('tabindex','0');  aps.setAttribute('role','button');
+
+      prev.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pulse(prev,'glow-red'); }});
+      aps.addEventListener('keydown',  (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pulse(aps,'glow-green'); }});
+    }
+
+    function setupImageModal(){
+      const modal = document.getElementById('lightbox');
+      const modalImg = document.getElementById('lightboxImg');
+      const modalTitle = document.getElementById('modalTitle');
+      const closeBtn = document.getElementById('lightboxClose');
+
+      if(!modal || !modalImg || !modalTitle || !closeBtn) return;
+
+      function openModal(src, title){
+        if(!src) return;
+        modalImg.src = src;
+        modalTitle.textContent = title || 'Imagem';
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      }
+      function closeModal(){
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden','true');
+        modalImg.src = '';
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('[data-modal-src]').forEach(el => {
+        el.addEventListener('click', () => {
+          const src = el.getAttribute('data-modal-src');
+          const title = el.getAttribute('data-modal-title') || 'Imagem';
+          if(el.id === 'heroFrame'){
+            const heroImg = document.getElementById('heroImg');
+            if(heroImg && heroImg.style.display === 'none') return;
+          }
+          openModal(src, title);
+        });
+        el.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            const src = el.getAttribute('data-modal-src');
+            const title = el.getAttribute('data-modal-title') || 'Imagem';
+            if(el.id === 'heroFrame'){
+              const heroImg = document.getElementById('heroImg');
+              if(heroImg && heroImg.style.display === 'none') return;
+            }
+            openModal(src, title);
+          }
+        });
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+      window.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+      });
+    }
+
+    function setupFaq(){
+      const items = document.querySelectorAll('.faq-item');
+      if(!items.length) return;
+
+      items.forEach(item => {
+        const btn = item.querySelector('.faq-btn');
+        const panel = item.querySelector('.faq-panel');
+        if(!btn || !panel) return;
+
+        btn.addEventListener('click', () => {
+          const isOpen = item.classList.contains('is-open');
+
+          items.forEach(other => {
+            if(other === item) return;
+            other.classList.remove('is-open');
+            const b = other.querySelector('.faq-btn');
+            const p = other.querySelector('.faq-panel');
+            if(b) b.setAttribute('aria-expanded', 'false');
+            if(p){
+              p.style.maxHeight = '0px';
+              p.setAttribute('aria-hidden','true');
+            }
+          });
+
+          if(isOpen){
+            item.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+            panel.style.maxHeight = '0px';
+            panel.setAttribute('aria-hidden','true');
+          } else {
+            item.classList.add('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+            panel.setAttribute('aria-hidden','false');
+          }
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        document.querySelectorAll('.faq-item.is-open .faq-panel').forEach(panel => {
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        });
+      });
+    }
+
+    function setupShine(){
+      const ctas = document.querySelectorAll('.cta-main');
+      if(!ctas.length) return;
+
+      const pulse = () => {
+        ctas.forEach(btn => {
+          btn.classList.remove('shine');
+          void btn.offsetWidth;
+          btn.classList.add('shine');
+        });
+      };
+      pulse();
+      setInterval(pulse, 5200);
+    }
+
+    function setupExitIntent(){
+      const modal = document.getElementById('exitModal');
+      const close = document.getElementById('exitClose');
+      const dismiss = document.getElementById('exitDismiss');
+      const offerSection = document.getElementById('offer');
+      const buyBtn = document.getElementById('buyBtn');
+      const heroCta = document.getElementById('heroPrimaryCta');
+      const floatBuy = document.getElementById('floatBuy');
+
+      if(!modal || !close || !dismiss || !offerSection) return;
+
+      const key = 'aps360_recover_offer_v1';
+      if(localStorage.getItem(key)) return;
+
+      const open = () => {
+        if(localStorage.getItem(key)) return;
+        modal.classList.add('show');
+        localStorage.setItem(key, '1');
+      };
+      const shut = () => modal.classList.remove('show');
+
+      close.addEventListener('click', shut);
+      dismiss.addEventListener('click', shut);
+      modal.addEventListener('click', (e) => { if(e.target === modal) shut(); });
+
+      const markIntent = () => localStorage.setItem(key, '1');
+      [buyBtn, heroCta, floatBuy].forEach(el => { if(el) el.addEventListener('click', markIntent, { passive: true }); });
+
+      let armed = false;
+      let offerVisible = false;
+      let wasOfferVisible = false;
+      let lastY = window.scrollY;
+
+      if('IntersectionObserver' in window){
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(ent => {
+            if(ent.target !== offerSection) return;
+            offerVisible = ent.isIntersecting;
+            if(offerVisible) armed = true;
+          });
+        }, { threshold: 0.40 });
+        io.observe(offerSection);
+      } else {
+        window.addEventListener('scroll', () => {
+          if(window.scrollY >= offerSection.offsetTop - 120) armed = true;
+        }, { passive: true });
+      }
+
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        const goingUp = y < lastY;
+
+        if(armed && goingUp && wasOfferVisible && !offerVisible){
+          open();
+        }
+        wasOfferVisible = offerVisible;
+        lastY = y;
+      }, { passive: true });
+    }
+
+    function setupCheckoutTracking(){
+      const NOISE_PARAMS = new Set(["fbclid"]);
+      const FALLBACKS = {
+        utm_source: "landingpage",
+        utm_medium: "site",
+        utm_campaign: "aps360",
+        utm_content: "aps360"
+      };
+
+      function normalizeValue(value){
+        return typeof value === "string" ? value.trim() : "";
+      }
+
+      function hasMeaningfulValue(value){
+        return normalizeValue(value) !== "";
+      }
+
+      function shouldKeepParam(key, value){
+        if (!hasMeaningfulValue(value)) return false;
+        if (NOISE_PARAMS.has(String(key).toLowerCase())) return false;
+        return true;
+      }
+
+      function getIncomingParams(){
+        const incoming = new URLSearchParams(window.location.search);
+        const clean = new URLSearchParams();
+
+        for (const [key, value] of incoming.entries()){
+          if (shouldKeepParam(key, value)){
+            clean.set(key, value);
+          }
+        }
+
+        if (!clean.get("utm_source")) clean.set("utm_source", FALLBACKS.utm_source);
+        if (!clean.get("utm_medium")) clean.set("utm_medium", FALLBACKS.utm_medium);
+        if (!clean.get("utm_campaign")) clean.set("utm_campaign", FALLBACKS.utm_campaign);
+        if (!clean.get("utm_content")) clean.set("utm_content", FALLBACKS.utm_content);
+
+        return clean;
+      }
+
+      function buildCheckoutHref(anchor, baseParams){
+        const explicitContent = normalizeValue(anchor.getAttribute("data-cta-content"));
+        const anchorHref = normalizeValue(anchor.getAttribute("href")) || HOTMART_BASE_LINK;
+        const sourceUrl = new URL(anchorHref, window.location.origin);
+        const finalUrl = new URL(HOTMART_BASE_LINK);
+        const finalParams = new URLSearchParams();
+
+        for (const [key, value] of baseParams.entries()){
+          if (shouldKeepParam(key, value)){
+            finalParams.set(key, value);
+          }
+        }
+
+        for (const [key, value] of sourceUrl.searchParams.entries()){
+          if (!finalParams.has(key) && shouldKeepParam(key, value)){
+            finalParams.set(key, value);
+          }
+        }
+
+        if (explicitContent){
+          finalParams.set("utm_content", explicitContent);
+        }
+
+        for (const [key, value] of finalParams.entries()){
+          finalUrl.searchParams.set(key, value);
+        }
+
+        return finalUrl.toString();
+      }
+
+      document.querySelectorAll("a[data-checkout]").forEach((anchor) => {
+        anchor.href = buildCheckoutHref(anchor, getIncomingParams());
+      });
+    }
+
+    setupPreloader();
+
+    window.addEventListener('load', () => {
+      setupSmartFloat();
+      setupPillars();
+      setupCompare();
+      setupImageModal();
+      setupFaq();
+      setupShine();
+      setupExitIntent();
+      setupCheckoutTracking();
+    });
+  </script>
 </body>
-
 </html>
